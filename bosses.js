@@ -47,5 +47,28 @@ window.BOSSART = (function () {
     <g><path d="M62 120 L138 120 L138 168 L62 168 Z" fill="#12234a"/>${[66, 82, 98, 114, 130].map(x => `<path d="M${x} 120 L${x + 8} 134 L${x + 16} 120 Z" fill="#fff"/>`).join("")}${[66, 82, 98, 114, 130].map(x => `<path d="M${x} 168 L${x + 8} 154 L${x + 16} 168 Z" fill="#fff"/>`).join("")}<animateTransform attributeName="transform" type="scale" values="1 1;1 .8;1 1" dur=".9s" repeatCount="indefinite" additive="sum"/></g>
     <rect x="132" y="96" width="8" height="18" rx="3" fill="#c9ced6"/>
     <g><rect x="150" y="170" width="30" height="8" fill="#d23b3b" transform="rotate(-15 165 174)"/><rect x="18" y="176" width="30" height="8" fill="#3fae5a" transform="rotate(10 33 180)"/></g></svg>`;
+  A.volcano = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g>
+    <path d="M20 186 L78 60 Q100 50 122 60 L180 186 Z" fill="#5a3a2a" stroke="#3a2418" stroke-width="3"/>
+    <path d="M78 60 Q100 50 122 60 L112 84 Q104 74 96 86 Q90 76 86 82 Z" fill="#ff5a1e"/>
+    <path d="M90 80 Q84 120 70 150" stroke="#ff7a2a" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M112 82 Q120 120 136 160" stroke="#ff7a2a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="80" cy="120" rx="11" ry="13" fill="#fff"/><ellipse cx="120" cy="120" rx="11" ry="13" fill="#fff"/><circle cx="83" cy="124" r="6" fill="#1a1020"/><circle cx="117" cy="124" r="6" fill="#1a1020"/>
+    <path d="M66 104 L92 112 M134 104 L108 112" stroke="#1a1020" stroke-width="5" stroke-linecap="round"/>
+    <path d="M78 156 Q100 140 122 156 Q100 150 78 156 Z" fill="#2a1408" stroke="#1a1020" stroke-width="3"/>
+    ${[0,1,2].map(i=>`<circle cx="${96+i*6}" cy="44" r="${8+i*3}" fill="#6a6a72" opacity=".7"><animate attributeName="cy" values="50;0" dur="2.4s" begin="${i*.8}s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="2.4s" begin="${i*.8}s" repeatCount="indefinite"/></circle>`).join("")}
+    <circle cx="70" cy="40" r="5" fill="#ff8a2a"><animate attributeName="cy" values="60;10;60" dur="1.6s" repeatCount="indefinite"/></circle><circle cx="134" cy="36" r="4" fill="#ffb02a"><animate attributeName="cy" values="60;16;60" dur="1.9s" repeatCount="indefinite"/></circle>
+    </g></svg>`;
+  A.pirate = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g>
+    <path d="M44 200 Q44 150 100 146 Q156 150 156 200 Z" fill="#8a1e22"/><path d="M92 148 L100 176 L108 148 Z" fill="#f4e8d0"/>
+    <ellipse cx="100" cy="106" rx="44" ry="48" fill="#e0b48a"/>
+    <path d="M56 100 Q56 150 100 156 Q144 150 144 100 Q132 132 100 134 Q68 132 56 100 Z" fill="#1a1416"/>
+    <path d="M36 76 Q100 20 164 76 Q100 60 36 76 Z" fill="#1a1416"/><path d="M60 66 Q100 34 140 66" stroke="#d9b25a" stroke-width="3" fill="none"/>
+    <g fill="#fff"><circle cx="100" cy="52" r="7"/><path d="M92 62 L108 62 L106 68 L94 68 Z"/></g><path d="M90 58 L110 46 M90 46 L110 58" stroke="#fff" stroke-width="2"/>
+    <ellipse cx="82" cy="98" rx="9" ry="10" fill="#fff"/><circle cx="84" cy="100" r="5" fill="#1a1020"/>
+    <circle cx="120" cy="98" r="12" fill="#111"/><path d="M58 88 L144 110" stroke="#111" stroke-width="3"/>
+    <path d="M70 84 L94 90" stroke="#1a1416" stroke-width="5" stroke-linecap="round"/>
+    <path d="M82 124 Q100 114 118 124 L114 128 Q100 120 86 128 Z" fill="#fff" stroke="#1a1416" stroke-width="2"/>
+    <circle cx="146" cy="110" r="5" fill="none" stroke="#d9b25a" stroke-width="3"/>
+    <g><path d="M160 150 L196 116" stroke="#c9ced6" stroke-width="5" stroke-linecap="round"/><path d="M156 154 L168 142" stroke="#6a4a2a" stroke-width="7" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" values="0 160 150;-12 160 150;0 160 150" dur="1.4s" repeatCount="indefinite"/></g>
+    </g></svg>`;
   return A;
 })();
