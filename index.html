@@ -143,7 +143,7 @@
 
 <script src="game.js?v=9"></script>
 <script src="bosses.js?v=9"></script>
-<script src="covers.js?v=9"></script>
+<script src="covers.js?v=10"></script>
 <script src="vocab-u2.js?v=9"></script>
 <script>
 /* ===== Seiten-Einstellungen (für jede Klasse anpassen) ===== */
@@ -152,6 +152,8 @@ window.VOCAB = window.VOCAB || {}; window.COVERS = window.COVERS || {};
 
 /* ===== Spiele (neueste oben). icon = Emoji fürs Cover, falls es in covers.js kein eigenes Cover gibt. Vokabel-Bosse kommen automatisch aus vocab-*.js ===== */
 const GRAMMAR = [
+  {id:"rc-treasure", unit:"u2", file:"treasure.html", icon:"🏴‍☠️", topic:"Relative clauses", name:"The Map of Blackheart's Treasure", info:"Complete the pirate's notes and follow the map to the treasure!", color:"linear-gradient(135deg,#06323a,#b8862a)", accent:"#c99a2e", isNew:true},
+  {id:"rc-carnival", unit:"u2", file:"carnival.html", icon:"🥁", topic:"Relative clauses & contact clauses", name:"Who's Who at the Carnival", info:"The steelpan star has disappeared before the big show. Find him!", color:"linear-gradient(135deg,#5a0f4a,#e0386a)", accent:"#e0386a", isNew:true},
   {id:"pp-blackout", unit:"u2", file:"blackout.html", icon:"🔦", topic:"Past progressive", name:"Blackout at Hollow Lane", info:"The lights went out – and a laptop disappeared. Who is lying?", color:"linear-gradient(135deg,#2a1f4a,#7a4a1e)"},
   {id:"pp-lighthouse", unit:"u2", file:"lighthouse.html", icon:"⛈️", topic:"Past progressive & simple past", name:"Lighthouse Logbook", info:"Save the Sea Star from the rocks!", color:"linear-gradient(135deg,#0f3247,#1a6a8a)"}
 ];

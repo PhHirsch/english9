@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Who's Who at the Carnival – Relative clauses</title>
+<style>
+  :root{--bg:#1a0820;--panel:#3a0f3a;--deep:#24082a;--acc:#ffd23a;--onacc:#3a1a00;--line:#6a2a6a;--txt:#fff2fa;--muted:#e0a9d6;--ok:#58e39a;--bad:#ff6b7a;--warn:#ffd166}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;min-height:100vh;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.45;padding-bottom:40px;
+    background-image:radial-gradient(ellipse at 85% -10%,rgba(255,210,58,.18),transparent 50%),radial-gradient(ellipse at 0% 100%,rgba(0,200,180,.22),transparent 55%),radial-gradient(ellipse at 100% 100%,rgba(255,60,120,.2),transparent 55%)}
+  header{position:sticky;top:0;z-index:5;background:rgba(26,8,32,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .hin{max-width:900px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between}
+  .me{width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid var(--acc);flex:none}
+  .steps{display:flex;gap:6px}
+  .steps span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--line);color:var(--muted);font-size:14px}
+  .steps span.done{background:var(--acc);border-color:var(--acc);color:var(--onacc)} .steps span.now{border-color:var(--acc);color:var(--acc)}
+  .hbtn{background:transparent;color:var(--txt);border:1.5px solid var(--line);border-radius:10px;padding:7px 12px;font-size:15px;cursor:pointer;font-family:inherit}
+  main{max-width:900px;margin:18px auto 0;padding:0 14px}
+  .panel{background:linear-gradient(180deg,#4a1446,var(--panel));border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+  .tag{display:inline-block;color:var(--acc);border:1px solid var(--acc);padding:2px 10px;border-radius:20px;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+  h1{font-size:34px;margin:12px 0 6px;line-height:1.15} h2{font-size:25px;margin:10px 0 4px}
+  .de{color:var(--muted);font-size:15px;font-style:italic;margin-top:3px}
+  .say{display:flex;gap:12px;align-items:flex-start;background:var(--deep);border-left:4px solid var(--acc);padding:12px 14px;border-radius:8px;margin:14px 0}
+  .say .ic{font-size:34px;line-height:1;flex:none}
+  .note{background:#fff8e6;color:#2a2418;border-radius:6px;padding:12px 16px;margin:12px 0;transform:rotate(-.4deg);box-shadow:0 6px 16px rgba(0,0,0,.4);font-size:17px;background-image:repeating-linear-gradient(#fff8e6 0 27px,#e6dcc4 27px 28px)}
+  .note b{color:#b4441a} .note .ex{font-style:italic}
+  .task{margin:16px 0 2px;font-weight:600}
+  .feedback{min-height:28px;margin-top:12px;font-size:17px;font-weight:600} .feedback.bad{color:var(--bad)} .feedback.good{color:var(--ok)}
+  .btn{font-size:20px;padding:12px 22px;border-radius:12px;border:2px solid var(--line);background:var(--deep);color:var(--txt);cursor:pointer;font-weight:600;font-family:inherit}
+  .btn.primary{background:var(--acc);border-color:var(--acc);color:var(--onacc)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .big{font-size:56px;text-align:center;margin:6px 0} .center{text-align:center}
+  .street{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+  .house{background:var(--deep);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;font-size:14px}
+  .house b{display:block;font-size:26px}
+  .sus{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin:12px 0}
+  .scard{background:var(--deep);border:2px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;text-align:left;color:var(--txt);font-family:inherit;font-size:16px}
+  .scard b{font-size:18px;display:block;margin-bottom:4px} .scard .em{font-size:34px}
+  .scard.wrong{border-color:var(--bad);opacity:.55} .scard.right{border-color:var(--ok)}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+  .overlay.show{display:flex} .overlay .panel{max-width:680px;width:100%;max-height:88vh;overflow:auto}
+  .rule{background:var(--deep);border-radius:10px;padding:12px 14px;margin:10px 0;border:1px solid var(--line)} .rule b{color:var(--acc)}
+  .clue{background:var(--deep);border-left:4px solid var(--warn);border-radius:8px;padding:8px 12px;margin:8px 0;font-size:16px}
+  input.name{font-size:22px;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);width:100%;max-width:380px;background:var(--deep);color:var(--txt)}
+  .small{font-size:14px;color:var(--muted)}
+  a.back{color:inherit;opacity:.7;font-size:15px}
+</style>
+</head>
+<body>
+<header id="hdr" style="display:none"><div class="hin">
+  <span class="me" id="me"></span>
+  <div class="steps" id="steps"></div>
+  <div class="row"><button class="hbtn" onclick="showNotes()">📋 Witness notes</button><button class="hbtn" onclick="showRules()">📘 Rules</button></div>
+</div></header>
+<main id="app"></main>
+<div class="overlay" id="ov" onclick="if(event.target===this)closeOv()"><div class="panel" id="ovc"></div></div>
+<script src="game.js?v=9"></script>
+<script src="tasks.js?v=2"></script>
+<script>
+window.GAME = {
+  id:"rc-carnival", key:"e9carnival", resumeTitle:"Who's Who at the Carnival",
+  guide:{icon:"👩🏾‍🎤", name:"Keisha"},
+  notesLabel:"📋 Witness notes", notesTitle:"📋 What we know about Marcus",
+  clueIcon:"🥁", clueTitle:"New information!", nextButton:"Next step",
+  startButton:"Help Keisha",
+  ranks:[[3,"Carnival Star 🏆"],[8,"Steelpan Hero 🥈"],[999,"Carnival Helper 🥉"]],
+  startHtml:()=>`<span class="tag">Port of Spain, Trinidad · Carnival Monday</span>
+    <h1>🥁 Who's Who at the Carnival</h1>
+    <div class="row" style="align-items:flex-start;gap:18px">
+      <div style="width:130px;border-radius:14px;overflow:hidden;flex:none;border:3px solid var(--acc)">${E8.myAvatar()}</div>
+      <div style="flex:1;min-width:240px">
+        <p>It's carnival in Trinidad! In one hour the steelpan band <b>Island Sound</b> has its big show. But their star, <b>Marcus</b>, has disappeared – and his steelpan is gone, too!</p>
+        <p>Keisha, the band leader, asks you for help. Thousands of people are partying in the streets. Listen to the witnesses, find out who is who – and find Marcus before the show starts.</p>
+      </div></div>`,
+  finishHtml:n=>`<div class="big">🎉🥁🎶</div><span class="tag">Show time</span><h1>Thank you, ${n}!</h1>
+    <p>It was all a mistake: Leon, the boy who plays in the band Island Stars, took the wrong steelpan – the drums of the two bands look almost the same. Marcus followed him to the harbour and they swapped the drums back. Ten minutes later Island Sound starts the show – and Marcus plays a song for the detective who found him: you!</p>`,
+  rulesHtml:`<span class="tag">Carnival grammar</span><h2>Relative clauses</h2>
+    <div class="rule"><b>who</b> → people: <i>the boy <b>who</b> took the steelpan</i><br><b>which</b> → things and animals: <i>a drum <b>which</b> is made of metal</i><br><b>that</b> → people, things and animals</div>
+    <div class="rule"><b>Pronoun needed</b> – a verb follows:<br><i>the people <b>who</b> are dancing</i> · <i>the float <b>which</b> is blue</i></div>
+    <div class="rule"><b>Can be left out</b> (contact clause) – a person or thing follows:<br><i>the steelpan <s>that</s> Marcus plays</i> → <i>the steelpan Marcus plays</i></div>
+    <p class="de">Trick: Was kommt direkt nach who/which/that? Ein Verb → Pronomen bleibt. Eine Person/ein Ding (+ Verb) → Pronomen kann wegfallen.</p>`,
+  STATIONS:[
+  { type:"match", title:"Who is who?", icon:"🎭",
+    say:"Thank you for helping! First, let me explain who and what is important today. Can you put my sentences together?",
+    note:`<i>Marcus is the musician <b>who</b> plays the steelpan.</i> → <b>who</b> for people<br>
+      <i>A steelpan is a drum <b>which</b> is made of metal.</i> → <b>which</b> for things and animals<br>
+      <b>that</b> is possible for people and things. These parts are called <b>relative clauses</b>: they say which person or thing we mean.`,
+    noteDe:"Relativsätze beschreiben eine Person oder Sache genauer: who für Personen, which für Dinge und Tiere, that für beides.",
+    task:"Match the beginnings and endings.", taskDe:"Tippe links einen Satzanfang an und dann rechts das passende Ende.",
+    hint:"People → <b>who</b>, things → <b>which</b>. Does the ending make sense? <span class='de'>Person oder Ding? Ergibt es Sinn?</span>",
+    pairs:[
+      ["Keisha is the band leader","who is looking for him."],
+      ["A steelpan is a drum","which you play with two sticks."],
+      ["Marcus is the steelpan player","who has disappeared."],
+      ["A float is a big truck","which carries a band through the streets."],
+      ["A costume is something","that people wear at the carnival."],
+      ["Tourists are people","who visit a country on holiday."]
+    ],
+    clue:"Marcus is the star of Island Sound. His steelpan has a silver star on it. The show starts in one hour." },
+
+  { type:"pick", title:"The witnesses", icon:"👀",
+    say:"Some people saw Marcus or his steelpan. Help me write down what they say.",
+    note:`<i>I saw a man <b>who</b> was carrying a steelpan.</i> · <i>He got on a float <b>which</b> was full of dancers.</i>`,
+    noteDe:"Personen → who, Dinge und Tiere → which.",
+    task:"Choose who or which.", taskDe:"Wähle who oder which.",
+    hint:"<b>who</b> → people, <b>which</b> → things and animals. <span class='de'>Person oder Ding/Tier?</span>",
+    items:[
+      {t:"“I saw a boy {0} was carrying a steelpan.”", g:[["who","which"]], a:["who"]},
+      {t:"“It was a steelpan {0} had a silver star on it.”", g:[["which","who"]], a:["which"]},
+      {t:"“The boy {0} took it was wearing a green hat.”", g:[["who","which"]], a:["who"]},
+      {t:"“Marcus talked to a girl {0} was selling coconut water.”", g:[["who","which"]], a:["who"]},
+      {t:"“Then he ran after a bus {0} goes to the harbour.”", g:[["which","who"]], a:["which"]},
+      {t:"“A dog {0} was barking ran after him!”", g:[["which","who"]], a:["which"], why:["A dog is an animal → <b>which</b>."]}
+    ],
+    clue:"A boy with a green hat was carrying Marcus's steelpan (silver star). Marcus took a bus to the harbour." },
+
+  { type:"order", title:"Keisha's notes", icon:"📝",
+    say:"I wrote my notes too fast – always two short sentences. Join them, please. The police may need them!",
+    note:`<i>A boy took the steelpan. <b>He</b> was wearing a green hat.</i><br>→ <i>The boy <b>who</b> took the steelpan was wearing a green hat.</i>`,
+    noteDe:"he/she/they → who, it → which. Der Relativsatz steht direkt hinter dem Wort, das er beschreibt.",
+    task:"Join the two sentences. Put the words in the right order.", taskDe:"Verbinde die beiden Sätze. Tippe die Wörter in der richtigen Reihenfolge an.",
+    hint:"The relative clause comes <b>right after</b> the person or thing it describes. <span class='de'>Direkt hinter das Bezugswort.</span>",
+    items:[
+      {p:"A boy took the steelpan. He was wearing a green hat.", w:["The","boy","who","took","the","steelpan","was","wearing","a","green","hat","."]},
+      {p:"A steelpan is missing. It has a silver star.", w:["The","steelpan","which","has","a","silver","star","is","missing","."]},
+      {p:"Marcus followed a boy. The boy ran to the harbour.", w:["Marcus","followed","a","boy","who","ran","to","the","harbour","."]},
+      {p:"The boy plays in a band. It is called Island Stars.", w:["The","boy","plays","in","a","band","which","is","called","Island","Stars","."]}
+    ],
+    clue:"The boy plays in another band: Island Stars. Their drums look almost like the drums of Island Sound!" },
+
+  { type:"sort", title:"Shorter messages", icon:"📱",
+    say:"I want to send short text messages to the band. Can I leave out who, which or that? Look at what comes after it!",
+    note:`<i>the boy <b>who</b> <u>took</u> the drum</i> → a <b>verb</b> follows → keep <b>who</b>!<br>
+      <i>the steelpan <b>that</b> <u>Marcus</u> plays</i> → a <b>person</b> follows → you can leave it out:<br>
+      → <i>the steelpan Marcus plays</i> (contact clause)`,
+    noteDe:"Folgt direkt ein Verb, muss das Pronomen bleiben. Folgt eine Person oder ein Ding, kann es wegfallen.",
+    task:"Can you leave out the pronoun?", taskDe:"Kann man das Pronomen weglassen?",
+    cats:[["▶ Pronoun needed","a verb follows"],["✂ Can be left out","a person/thing follows"]],
+    cards:[
+      ["the steelpan that Marcus plays",1,"After <b>that</b> comes a person (Marcus) → you can leave it out."],
+      ["the boy who took the drum",0,"After <b>who</b> comes a verb (took) → keep it."],
+      ["the music which the band is playing",1,"After <b>which</b> comes a thing (the band) → you can leave it out."],
+      ["the float which is blue",0,"After <b>which</b> comes a verb (is) → keep it."],
+      ["the costume that Keisha made",1,"After <b>that</b> comes a person (Keisha) → you can leave it out."],
+      ["the people who are dancing",0,"After <b>who</b> comes a verb (are) → keep it."],
+      ["the girl who Marcus asked",1,"After <b>who</b> comes a person (Marcus) → you can leave it out."],
+      ["the drum which has a silver star",0,"After <b>which</b> comes a verb (has) → keep it."]
+    ],
+    clue:"Keisha's message to the band: “The boy who took the drum plays for Island Stars. Get ready – the show we planned is still on!”" },
+
+  { type:"type", title:"A message from the harbour", icon:"⚓",
+    say:"A friend at the harbour sent me a message, but some words are missing. Write who or which – or leave the box empty if you can leave the pronoun out!",
+    note:`Leave the box <b>empty</b> if the pronoun can go. <i>The drum ___ Leon took …</i> → empty ✔`,
+    noteDe:"Kann das Pronomen wegfallen, lass das Feld leer. Sonst schreibe who oder which (that ist auch richtig).",
+    task:"Write who or which – or leave the box empty.", taskDe:"Schreibe who oder which – oder lass das Feld leer, wenn es wegfallen kann.",
+    typeHint:(a,v)=>{ const n=T.norm(v);
+      if(!a && n) return "A person or thing follows – you can leave the pronoun out. Leave the box <b>empty</b>. <span class='de'>Feld leer lassen.</span>";
+      if(a && !n) return "A verb follows – you <b>need</b> a pronoun here. <span class='de'>Hier muss ein Pronomen stehen.</span>";
+      return a==="who" ? "It's a person → <b>who</b>. <span class='de'>Person → who.</span>" : "It's a thing → <b>which</b>. <span class='de'>Ding → which.</span>"; },
+    items:[
+      {t:"The boy {0} took the steelpan is called Leon.", v:["who / which / –"], a:["who"], alt:[["that"]]},
+      {t:"The drum {0} Leon took belongs to Marcus.", v:["who / which / –"], a:[""]},
+      {t:"Leon thought it was the drum {0} his band uses.", v:["who / which / –"], a:[""]},
+      {t:"They are at a stall {0} sells seafood.", v:["who / which / –"], a:["which"], alt:[["that"]]},
+      {t:"The people {0} you met at the bus stop helped us.", v:["who / which / –"], a:[""]}
+    ],
+    clue:"Message from the harbour: “Marcus is with the boy who is wearing a green hat. They are at the stall which sells seafood.”" },
+
+  { type:"choose", title:"Find Marcus!", icon:"🔎",
+    say:"I'm at the harbour now, but there are so many people! Read the message in your witness notes again. Where is Marcus?",
+    task:"Tap the right picture.", taskDe:"Lies die Nachricht (📋 Witness notes) und tippe auf das richtige Bild.",
+    okText:"There he is! The boy who is wearing a green hat and Marcus – next to the stall which sells seafood.",
+    options:[
+      {em:"👦🏾🟢🧢 🧑🏾‍🦱🥁 🥥", n:"Picture A", s:"A boy who is wearing a green hat and a man who is holding a steelpan – next to a stall which sells coconut water.", no:"Look again: this stall sells coconut water, not seafood. <span class='de'>Falscher Stand.</span>"},
+      {em:"👦🏾🔴🧢 🧑🏾‍🦱🥁 🦞", n:"Picture B", s:"A boy who is wearing a red hat and a man who is holding a steelpan – next to a stall which sells seafood.", no:"Look again: this boy is wearing a red hat. <span class='de'>Die Mütze ist rot.</span>"},
+      {em:"👧🏾🟢🧢 🧑🏾‍🦱🍽️ 🦞", n:"Picture C", s:"A girl who is wearing a green hat and a man who is eating – next to a stall which sells seafood.", no:"Look again: it's a girl – and the man isn't holding a steelpan. <span class='de'>Das ist ein Mädchen.</span>"},
+      {em:"👦🏾🟢🧢 🧑🏾‍🦱🥁 🦞", n:"Picture D", s:"A boy who is wearing a green hat and a man who is holding a steelpan – next to a stall which sells seafood.", ok:true}
+    ],
+    clue:"Found: Marcus and Leon at the seafood stall at the harbour." }
+  ]
+};
+</script>
+<script src="story.js?v=1"></script>
+</body>
+</html>

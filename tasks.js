@@ -107,10 +107,11 @@
   }
 
   /* order: ["What","were","you","doing","?"] */
-  function rOrder(st, target, ex, miss, ok, fb) {
+  function rOrder(st, item, ex, miss, ok, fb) {
+    const target = Array.isArray(item) ? item : item.w, prompt = Array.isArray(item) ? "" : item.p;
     let pool = shuffle(target.map(w => ({ w }))), t = 0, ans = [], locked = false;
     while (pool.map(x => x.w).join(" ") === target.join(" ") && t++ < 10) pool = shuffle(pool);
-    ex.innerHTML = `<div class="t-line" id="t-al"></div><div class="t-pool" id="t-pl"></div><div class="t-opts"><button class="t-btn primary" id="t-chk">Check</button><button class="t-btn" id="t-rs">Reset</button></div>`;
+    ex.innerHTML = (prompt ? `<div class="t-screen" style="font-size:19px">${prompt}</div>` : "") + `<div class="t-line" id="t-al"></div><div class="t-pool" id="t-pl"></div><div class="t-opts"><button class="t-btn primary" id="t-chk">Check</button><button class="t-btn" id="t-rs">Reset</button></div>`;
     function draw() {
       $("t-al").innerHTML = ans.map((x, k) => `<span class="t-chip" data-k="${k}">${x.w}</span>`).join("");
       $("t-pl").innerHTML = pool.map((x, k) => `<span class="t-chip" data-k="${k}">${x.w}</span>`).join("");

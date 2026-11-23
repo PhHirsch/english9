@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>The Map of Blackheart's Treasure – Relative clauses</title>
+<style>
+  :root{--bg:#06222a;--panel:#0f3a40;--deep:#082a30;--acc:#f2c14e;--onacc:#2a1e00;--line:#2a6168;--txt:#fbf4e2;--muted:#9fc7c4;--ok:#58e39a;--bad:#ff6b7a;--warn:#ffd166}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;min-height:100vh;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.45;padding-bottom:40px;
+    background-image:radial-gradient(ellipse at 80% -10%,rgba(242,193,78,.16),transparent 50%),radial-gradient(ellipse at 10% 110%,#0d5560,transparent 60%)}
+  header{position:sticky;top:0;z-index:5;background:rgba(6,34,42,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .hin{max-width:900px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between}
+  .me{width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid var(--acc);flex:none}
+  .steps{display:flex;gap:6px}
+  .steps span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--line);color:var(--muted);font-size:14px}
+  .steps span.done{background:var(--acc);border-color:var(--acc);color:var(--onacc)} .steps span.now{border-color:var(--acc);color:var(--acc)}
+  .hbtn{background:transparent;color:var(--txt);border:1.5px solid var(--line);border-radius:10px;padding:7px 12px;font-size:15px;cursor:pointer;font-family:inherit}
+  main{max-width:900px;margin:18px auto 0;padding:0 14px}
+  .panel{background:linear-gradient(180deg,#14474e,var(--panel));border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+  .tag{display:inline-block;color:var(--acc);border:1px solid var(--acc);padding:2px 10px;border-radius:20px;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+  h1{font-size:34px;margin:12px 0 6px;line-height:1.15} h2{font-size:25px;margin:10px 0 4px}
+  .de{color:var(--muted);font-size:15px;font-style:italic;margin-top:3px}
+  .say{display:flex;gap:12px;align-items:flex-start;background:var(--deep);border-left:4px solid var(--acc);padding:12px 14px;border-radius:8px;margin:14px 0}
+  .say .ic{font-size:34px;line-height:1;flex:none}
+  .note{background:#fff8e6;color:#2a2418;border-radius:6px;padding:12px 16px;margin:12px 0;transform:rotate(-.4deg);box-shadow:0 6px 16px rgba(0,0,0,.4);font-size:17px;background-image:repeating-linear-gradient(#fff8e6 0 27px,#e6dcc4 27px 28px)}
+  .note b{color:#b4441a} .note .ex{font-style:italic}
+  .task{margin:16px 0 2px;font-weight:600}
+  .feedback{min-height:28px;margin-top:12px;font-size:17px;font-weight:600} .feedback.bad{color:var(--bad)} .feedback.good{color:var(--ok)}
+  .btn{font-size:20px;padding:12px 22px;border-radius:12px;border:2px solid var(--line);background:var(--deep);color:var(--txt);cursor:pointer;font-weight:600;font-family:inherit}
+  .btn.primary{background:var(--acc);border-color:var(--acc);color:var(--onacc)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .big{font-size:56px;text-align:center;margin:6px 0} .center{text-align:center}
+  .street{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+  .house{background:var(--deep);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;font-size:14px}
+  .house b{display:block;font-size:26px}
+  .sus{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin:12px 0}
+  .scard{background:var(--deep);border:2px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;text-align:left;color:var(--txt);font-family:inherit;font-size:16px}
+  .scard b{font-size:18px;display:block;margin-bottom:4px} .scard .em{font-size:34px}
+  .scard.wrong{border-color:var(--bad);opacity:.55} .scard.right{border-color:var(--ok)}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+  .overlay.show{display:flex} .overlay .panel{max-width:680px;width:100%;max-height:88vh;overflow:auto}
+  .rule{background:var(--deep);border-radius:10px;padding:12px 14px;margin:10px 0;border:1px solid var(--line)} .rule b{color:var(--acc)}
+  .clue{background:var(--deep);border-left:4px solid var(--warn);border-radius:8px;padding:8px 12px;margin:8px 0;font-size:16px}
+  input.name{font-size:22px;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);width:100%;max-width:380px;background:var(--deep);color:var(--txt)}
+  .small{font-size:14px;color:var(--muted)}
+  a.back{color:inherit;opacity:.7;font-size:15px}
+  .isles{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.isles span{background:var(--deep);border:1px dashed var(--acc);border-radius:20px;padding:4px 12px;font-size:15px}
+</style>
+</head>
+<body>
+<header id="hdr" style="display:none"><div class="hin">
+  <span class="me" id="me"></span>
+  <div class="steps" id="steps"></div>
+  <div class="row"><button class="hbtn" onclick="showNotes()">🗺️ Map notes</button><button class="hbtn" onclick="showRules()">📘 Rules</button></div>
+</div></header>
+<main id="app"></main>
+<div class="overlay" id="ov" onclick="if(event.target===this)closeOv()"><div class="panel" id="ovc"></div></div>
+<script src="game.js?v=9"></script>
+<script src="tasks.js?v=2"></script>
+<script>
+const KEEP = ["▶ Pronoun needed","verb follows → keep who/which/that"], DROP = ["✂ Can be left out","a person/thing follows → you can leave it out"];
+window.GAME = {
+  id:"rc-treasure", key:"e9treasure", resumeTitle:"The Map of Blackheart's Treasure",
+  guide:{icon:"🤿", name:"Grace"},
+  notesLabel:"🗺️ Map notes", notesTitle:"🗺️ The route so far",
+  clueIcon:"🏝️", clueTitle:"Next island unlocked!", nextButton:"Sail on",
+  startButton:"Open the map",
+  ranks:[[3,"Pirate Captain 🏆"],[8,"First Mate 🥈"],[999,"Cabin Boy / Cabin Girl 🥉"]],
+  startHtml:()=>`<span class="tag">British Virgin Islands · diving holiday</span>
+    <h1>🏴‍☠️ The Map of Blackheart's Treasure</h1>
+    <div class="row" style="align-items:flex-start;gap:18px">
+      <div style="width:130px;border-radius:14px;overflow:hidden;flex:none;border:3px solid var(--acc)">${E8.myAvatar()}</div>
+      <div style="flex:1;min-width:240px">
+        <p>You are a beginner at a diving school on the British Virgin Islands. On your first dive you find an old <b>bottle</b> in a shipwreck. Inside is a map – the map of <b>Captain Blackheart</b>, the brutal pirate!</p>
+        <p>But the sea water has damaged Blackheart's notes. Your diving teacher Grace helps you to complete them – island by island, until you find the treasure.</p>
+      </div></div>
+    <div class="isles">${["🏝️ Turtle Island","🌴 Parrot Rock","🗿 Skull Rock","⛰️ Cannon Hill","💰 Treasure Bay"].map(x=>`<span>${x}</span>`).join("")}</div>`,
+  finishHtml:n=>`<div class="big">💰✨</div><span class="tag">Treasure found</span><h1>You did it, ${n}!</h1>
+    <p>The chest opens: old gold coins, a silver dagger and a letter from Blackheart. Grace laughs: “The treasure that Blackheart hid for 300 years – found by a diver who only started last week!” Of course you give it to the museum in Road Town – and the museum puts your name next to it.</p>`,
+  rulesHtml:`<span class="tag">Pirate's grammar</span><h2>Relative clauses</h2>
+    <div class="rule"><b>who</b> → people: <i>the man <b>who</b> knows the way</i><br><b>which</b> → things and animals: <i>the rock <b>which</b> looks like a skull</i><br><b>that</b> → people, things and animals</div>
+    <div class="rule"><b>Pronoun needed</b> – a verb follows (the pronoun is the subject):<br><i>the parrot <b>which</b> talks</i> · <i>the girl <b>who</b> found the bottle</i></div>
+    <div class="rule"><b>Can be left out</b> (contact clause) – a person or thing follows (the pronoun is the object):<br><i>the island <s>which</s> Blackheart loved</i> → <i>the island Blackheart loved</i></div>
+    <p class="de">Trick: Was kommt direkt nach who/which/that? Ein Verb → Pronomen bleibt. Eine Person/ein Ding (+ Verb) → Pronomen kann wegfallen.</p>`,
+  STATIONS:[
+  { type:"pick", title:"Turtle Island: who or which?", icon:"🐢",
+    say:"Look – Blackheart wrote short notes for every island. Some words are missing. First we need to know: who or which?",
+    note:`<i>Find the old fisherman <b>who</b> lives on Turtle Island.</i> → a person<br>
+      <i>Take the boat <b>which</b> is hidden behind the palm trees.</i> → a thing<br>
+      The part with who/which tells you <b>which</b> person or thing Blackheart means. It's called a <b>relative clause</b>.`,
+    noteDe:"Ein Relativsatz beschreibt eine Person oder Sache genauer. Welches Pronomen passt? Schau, worauf es sich bezieht.",
+    task:"Choose who or which.", taskDe:"Wähle who (Personen) oder which (Dinge, Tiere).",
+    hint:"<b>who</b> → people, <b>which</b> → things and animals. <span class='de'>Person oder Ding/Tier?</span>",
+    items:[
+      {t:"Find the old fisherman {0} lives on Turtle Island.", g:[["who","which"]], a:["who"]},
+      {t:"Take the boat {0} is hidden behind the palm trees.", g:[["which","who"]], a:["which"]},
+      {t:"Ask the woman {0} sells mangos at the harbour.", g:[["who","which"]], a:["who"]},
+      {t:"Follow the parrot {0} can say “gold”.", g:[["which","who"]], a:["which"], why:["A parrot is an animal → <b>which</b>."]},
+      {t:"Swim to the rock {0} looks like a skull.", g:[["which","who"]], a:["which"]},
+      {t:"Don't trust the sailors {0} work on the black ship.", g:[["who","which"]], a:["who"]}
+    ],
+    clue:"Turtle Island: the old fisherman lent you the boat which was hidden behind the palm trees." },
+
+  { type:"order", title:"Parrot Rock: two notes become one", icon:"🦜",
+    say:"Here Blackheart wrote two short sentences – but the map only has space for one. Join them with who or which!",
+    note:`<i>The pirate hid the treasure. <b>He</b> was called Blackheart.</i><br>→ <i>The pirate <b>who</b> hid the treasure was called Blackheart.</i><br>
+      <i>There is a cave. <b>It</b> has a secret door.</i> → <i>There is a cave <b>which</b> has a secret door.</i>`,
+    noteDe:"he/she/they werden zu who, it wird zu which. Der Relativsatz steht direkt hinter dem Wort, das er beschreibt.",
+    task:"Join the two sentences. Put the words in the right order.", taskDe:"Verbinde die beiden Sätze zu einem. Tippe die Wörter in der richtigen Reihenfolge an.",
+    hint:"The relative clause comes <b>right after</b> the person or thing it describes. <span class='de'>Direkt hinter das Bezugswort.</span>",
+    items:[
+      {p:"There is a cave. It has a secret door.", w:["There","is","a","cave","which","has","a","secret","door","."]},
+      {p:"The pirate hid the treasure. He was called Blackheart.", w:["The","pirate","who","hid","the","treasure","was","called","Blackheart","."]},
+      {p:"Blackheart had a parrot. It knew the way.", w:["Blackheart","had","a","parrot","which","knew","the","way","."]},
+      {p:"A sailor stole the map. He was never seen again.", w:["The","sailor","who","stole","the","map","was","never","seen","again","."]}
+    ],
+    clue:"Parrot Rock: the parrot which knew the way showed you a cave which has a secret door." },
+
+  { type:"sort", title:"Skull Rock: the secret of short notes", icon:"💀",
+    say:"Blackheart wrote very short notes. Sometimes he left out who or which! When can you do that? Look at what comes after the pronoun.",
+    note:`<i>the rock <b>which</b> <u>looks</u> like a skull</i> → a <b>verb</b> follows → keep <b>which</b>!<br>
+      <i>the island <b>which</b> <u>Blackheart</u> loved</i> → a <b>person/thing</b> follows → you can leave it out:<br>
+      → <i>the island Blackheart loved</i> (contact clause)`,
+    noteDe:"Folgt direkt ein Verb, muss das Pronomen bleiben. Folgt eine Person oder ein Ding (das Subjekt des Relativsatzes), kann man es weglassen.",
+    task:"Can you leave out the pronoun?", taskDe:"Kann man das Pronomen weglassen? Schau, was direkt danach kommt.",
+    cats:[KEEP,DROP],
+    cards:[
+      ["the rock which looks like a skull",0,"After <b>which</b> comes a verb (looks) → keep it."],
+      ["the island which Blackheart loved",1,"After <b>which</b> comes a person (Blackheart) → you can leave it out."],
+      ["the man who knows the way",0,"After <b>who</b> comes a verb (knows) → keep it."],
+      ["the map that the old diver found",1,"After <b>that</b> comes a person (the old diver) → you can leave it out."],
+      ["the parrot which talks",0,"After <b>which</b> comes a verb (talks) → keep it."],
+      ["the cave which the pirates used",1,"After <b>which</b> come people (the pirates) → you can leave it out."],
+      ["the sailors who were scared",0,"After <b>who</b> comes a verb (were) → keep it."],
+      ["the cannon that we saw on the beach",1,"After <b>that</b> comes a person (we) → you can leave it out."]
+    ],
+    clue:"Skull Rock: behind the rock which looks like a skull there is a path up to Cannon Hill." },
+
+  { type:"pick", title:"Cannon Hill: as short as Blackheart", icon:"💣",
+    say:"These are the last notes before the treasure. Write them like Blackheart: as short as possible! Leave out the pronoun whenever you can.",
+    note:`Choose <b>–</b> (nothing) if you can leave out the pronoun.<br>
+      <i>Open the box <b>–</b> Blackheart buried.</i> ✔ &nbsp; <i>Talk to the girl <b>who</b> found the bottle.</i> ✔`,
+    noteDe:"Wähle „–“, wenn das Pronomen wegfallen kann. Sonst who oder which.",
+    task:"Choose who, which or – (nothing).", taskDe:"Wähle who, which oder „–“ (kein Pronomen), wenn es wegfallen kann.",
+    hint:"What comes next? A <b>verb</b> → who/which. A <b>person or thing</b> → choose <b>–</b>.",
+    items:[
+      {t:"Dig under the palm tree {0} the parrot showed you.", g:[["–","which","who"]], a:["–"], why:["After the gap comes “the parrot” (a thing/animal + verb) → leave it out: <b>–</b>."]},
+      {t:"Ask the girl {0} found the bottle.", g:[["who","–","which"]], a:["who"], why:["After the gap comes a verb (found) → you need <b>who</b>."]},
+      {t:"Open the box {0} Blackheart buried.", g:[["–","which","who"]], a:["–"], why:["After the gap comes a person (Blackheart) → leave it out: <b>–</b>."]},
+      {t:"The key is in the boat {0} is lying on the beach.", g:[["which","–","who"]], a:["which"], why:["After the gap comes a verb (is) → you need <b>which</b>."]},
+      {t:"Give the gold to the people {0} you meet in the village.", g:[["–","who","which"]], a:["–"], why:["After the gap comes a person (you) → leave it out: <b>–</b>."]},
+      {t:"Never trust a pirate {0} smiles all the time.", g:[["who","–","which"]], a:["who"], why:["After the gap comes a verb (smiles) → you need <b>who</b>."]}
+    ],
+    clue:"Cannon Hill: the key was in the boat which was lying on the beach. The box Blackheart buried has a lock with a riddle." },
+
+  { type:"spot", title:"Treasure Bay: Blackheart's last riddle", icon:"🔐", button:"Open the lock",
+    say:"The chest has a lock with Blackheart's last letter. It only opens if you find the three mistakes in it!",
+    note:`<i>“I am Blackheart. The treasure I stole from the Spanish ships is in this chest …”</i>`,
+    noteDe:"Nur wer die drei Fehler findet, öffnet das Schloss.",
+    task:"Tap the three wrong sentences. Then open the lock.", taskDe:"Tippe die drei falschen Sätze an und öffne dann das Schloss.",
+    hint:"Check: who for people, which for things – and is a pronoun <b>missing</b> before a verb?",
+    items:[
+      {s:"The man which drew this map was me, Blackheart.", wrong:true, fix:"The man who drew this map was me, Blackheart."},
+      {s:"The gold I stole is in this chest.", wrong:false},
+      {s:"Only a person knows my secret can open it.", wrong:true, fix:"Only a person who knows my secret can open it."},
+      {s:"The code is the number which you can see on the cannon.", wrong:false},
+      {s:"The ship who brought me here sank in a storm.", wrong:true, fix:"The ship which brought me here sank in a storm."},
+      {s:"The island I loved most is Barbados.", wrong:false}
+    ],
+    clue:"Treasure Bay: the lock opened!" }
+  ]
+};
+</script>
+<script src="story.js?v=1"></script>
+</body>
+</html>
