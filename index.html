@@ -3,10 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>English 9</title>
+<title>The Hirsch Games · English 9</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cinzel:wght@700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .brand img{width:52px;height:52px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
+  .brand .bn{font-family:Cinzel,Georgia,serif;font-weight:900;font-size:21px;color:#e9bd4a;letter-spacing:.08em;line-height:1.05;text-shadow:0 2px 0 rgba(0,0,0,.5)}
+  .brand .bn small{display:block;font-family:Inter,sans-serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#b9c3d6;margin-top:4px}
+  .brand.big img{width:72px;height:72px}.brand.big .bn{font-size:30px}
+  @media(max-width:760px){.brand:not(.big) .bn{display:none}.brand img{width:44px;height:44px}}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;background:#07080d;color:#fff;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
   .D{font-family:Anton,Impact,"Arial Narrow Bold",sans-serif;letter-spacing:.04em;font-weight:400}
@@ -122,6 +129,7 @@
   .tour .tip .de{display:block;margin-bottom:10px}
   .tour .steps{font-size:12px;color:#b9c3d6;font-weight:700;letter-spacing:.1em}
   .help{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:50%;width:38px;height:38px;font-size:18px;font-weight:800;cursor:pointer}
+  @media(max-width:480px){.nav button{font-size:16px;padding:6px 2px}.nav{gap:14px!important}}
 </style>
 </head>
 <body>
@@ -136,14 +144,14 @@
   </div>
   <div id="shelves"></div>
 </div>
-<nav class="nav"><button class="D on" data-n="play">PLAY</button><button class="D" data-n="locker">LOCKER</button><button class="D" data-n="shop">SHOP</button><button class="D" data-n="trophies">TROPHIES</button></nav>
+<nav class="nav"><button class="D on" data-n="play">PLAY</button><button class="D" data-n="locker">LOCKER</button><button class="D" data-n="shop">SHOP</button><button class="D" data-n="home">HOME</button><button class="D" data-n="trophies">TROPHIES</button></nav>
 <div class="ov" id="ov"><div class="sheet" id="shop"></div></div>
 <div class="ov" id="pinov" style="z-index:40"><div class="sheet pinbox" id="pinbox"></div></div>
 <div class="tour" id="tour"><div class="hole" id="hole"></div><div class="tip" id="tip"></div></div>
 
-<script src="game.js?v=9"></script>
-<script src="bosses.js?v=9"></script>
-<script src="covers.js?v=10"></script>
+<script src="game.js?v=10"></script>
+<script src="bosses.js?v=10"></script>
+<script src="covers.js?v=11"></script>
 <script src="vocab-u2.js?v=9"></script>
 <script>
 /* ===== Seiten-Einstellungen (für jede Klasse anpassen) ===== */
@@ -169,6 +177,7 @@ const COVER = g => COVERS[g.id] || `<svg viewBox="0 0 220 140" xmlns="http://www
 const ALL = [], SHELVES = [];
 if (Object.values(VOCAB).some(u => u.sections && u.sections.length)) {
   ALL.push({id:"daily", href:"boss.html?id=daily", topic:"Daily Challenge", name:"Boss of the Day", info:"10 random words from all units – a new boss every day. Up to 15 coins, once a day!", art:COVERS.daily, accent:"#e0533a", color:"linear-gradient(135deg,#7a1e3a,#e0533a)", shelf:"daily"});
+  ALL.push({id:"review", href:"boss.html?id=review", topic:"Mistake box", name:"The Mistake Monster", info:"A boss made of the words you got wrong. Get them right and they leave your box! Coins once a day.", art:COVERS.review||"", accent:"#3fae5a", color:"linear-gradient(135deg,#1e4a24,#3fae5a)", shelf:"daily", only:() => { const s = state(); return !!(s && s.review && s.review.length); }});
   SHELVES.push({key:"daily", title:"Today"});
 }
 [...new Set(Object.keys(VOCAB).concat(GRAMMAR.map(g => g.unit)))].sort().reverse().forEach(key => {
@@ -214,9 +223,10 @@ function setBg(g){
 /* ===== Kopfzeile ===== */
 function topBar(){
   const s = state();
-  if (!s) { $("top").innerHTML = `<div class="D logo">${SITE.title}</div><div class="pills"><button class="howto" onclick="tour()">❓ HOW IT WORKS</button></div>`; return; }
+  const brand = big => `<div class="brand ${big?"big":""}"><img src="logo.svg" alt=""><div class="bn">THE HIRSCH<br>GAMES<small>${SITE.sub}</small></div></div>`;
+  if (!s) { $("top").innerHTML = `${brand(true)}<div class="pills"><button class="howto" onclick="tour()">❓ HOW IT WORKS</button></div>`; return; }
   const L = E8.levelInfo(s.xp||0), stars = Object.values(s.stars||{}).reduce((a,b)=>a+b,0);
-  $("top").innerHTML = `<div class="hex D">${L.level}</div><div class="tier"><div class="D">LEVEL ${L.level} · ${L.name.toUpperCase()}</div><div class="bar"><i style="width:${L.pct}%"></i></div><div class="xpt">${L.next?`${s.xp||0} / ${L.next} XP`:"max level"}</div></div>
+  $("top").innerHTML = `${brand(false)}<div class="hex D">${L.level}</div><div class="tier"><div class="D">LEVEL ${L.level} · ${L.name.toUpperCase()}</div><div class="bar"><i style="width:${L.pct}%"></i></div><div class="xpt">${L.next?`${s.xp||0} / ${L.next} XP`:"max level"}</div></div>
     <div class="pills"><span class="pill D">🪙 ${s.coins}</span><span class="pill D">⭐ ${stars}</span><button class="help" onclick="tour()" title="How does it work?">?</button><button class="out" id="out">Log out</button></div>`;
   $("out").onclick = () => { E8.logout(); render(); };
 }
@@ -252,18 +262,18 @@ function feat(){
   const g = SEL, s = state(), n = starsOf(g.id), l = SCORES[g.id]||[];
   const done = g.id==="daily" && s && s.stats && s.stats.dailyToday;
   $("feat").innerHTML = `<div class="kicker">${g.isNew?"NEW · ":""}${g.topic.toUpperCase()}</div><h1 class="D">${g.name.toUpperCase()}</h1><p>${g.info}</p>
-    <div class="meta">${s && g.id!=="daily" ? `<span class="st">${stStr(n)}</span>` : ""}${done?`<span>✔ Done today – you can still practise!</span>`:""}</div>
+    <div class="meta">${s && g.id!=="daily" && g.id!=="review" ? `<span class="st">${stStr(n)}</span>` : ""}${done?`<span>✔ Done today – you can still practise!</span>`:""}</div>
     ${g.href?`<a class="play D" href="${g.href}"><span>PLAY ▶</span></a>`:""}
     ${l.length?`<div class="top3">🏆 TOP 3 ${l.map((x,i)=>`<span class="p ${["g","s","b"][i]}"><div>${E8.avatarSVG(x.eq)}</div>#${x.nr}</span>`).join("")}</div>`:""}`;
 }
 /* ===== Reihen ===== */
 function shelves(){
   $("shelves").innerHTML = SHELVES.map(sh => {
-    const games = ALL.filter(g => g.shelf === sh.key);
+    const games = ALL.filter(g => g.shelf === sh.key && (!g.only || g.only()));
     return `<div class="shelf"><h3 class="D">${sh.title.toUpperCase()}${sh.sub?`<small>${sh.sub}</small>`:""}</h3><div class="strip">${games.map(g => {
       const n = starsOf(g.id);
       return `<div class="card ${SEL&&SEL.id===g.id?"sel":""}" data-id="${g.id}" style="background:${g.color}">${g.isNew?`<span class="new">NEW</span>`:""}<div class="art">${g.art}</div>
-        <div class="lab"><small>${g.topic.toUpperCase()}</small>${g.name}${state()&&g.id!=="daily"?` <span style="color:#ffd23a;font-size:12px">${stStr(n)}</span>`:""}</div>${n?`<div class="prog" style="width:${n*33.4}%"></div>`:""}</div>`;
+        <div class="lab"><small>${g.topic.toUpperCase()}</small>${g.name}${state()&&g.id!=="daily"&&g.id!=="review"?` <span style="color:#ffd23a;font-size:12px">${stStr(n)}</span>`:""}</div>${n?`<div class="prog" style="width:${n*33.4}%"></div>`:""}</div>`;
     }).join("")}</div></div>`;
   }).join("");
   document.querySelectorAll(".card").forEach(c => c.onclick = () => {
@@ -285,6 +295,7 @@ document.querySelectorAll(".nav button").forEach(b => b.onclick = () => {
   const n = b.dataset.n;
   if (n === "play") { closeShop(); window.scrollTo({top:0,behavior:"smooth"}); return; }
   if (!state()) { closeShop(); window.scrollTo({top:0,behavior:"smooth"}); if($("msg")) $("msg").textContent="Please log in first. – Bitte zuerst anmelden."; return; }
+  if (n === "home") { location.href = "home.html"; return; }
   if (n === "trophies") return openTrophies();
   tab = 0; openShop(n);
 });
@@ -295,7 +306,7 @@ function openTrophies(){
   const s = state(); setNav("trophies"); $("ov").classList.add("show");
   $("shop").innerHTML = `<div class="row" style="justify-content:space-between"><div class="D" style="font-size:30px">TROPHIES</div><button class="btn small" onclick="closeShop()">✕ Close</button></div>
     <h3 class="sec">Badges</h3><div class="ach">${ACH.map(a=>`<div class="${s.stats&&a[3](s)?"":"off"}"><b>${a[0]}</b><span><strong>${a[1]}</strong><br><span class="de" style="font-style:normal">${a[2]}</span></span></div>`).join("")}</div>
-    <h3 class="sec">Top 3</h3>${ALL.filter(g=>g.id!=="daily").map(g=>{const l=SCORES[g.id]||[];return `<div class="trow"><span class="nm">${g.name}</span>${l.length?l.map((x,i)=>`<span class="top3" style="margin:0"><span class="p ${["g","s","b"][i]}"><div>${E8.avatarSVG(x.eq)}</div>#${x.nr}</span></span>`).join(""):`<span class="de">Nobody yet – be the first!</span>`}</div>`}).join("")}`;
+    <h3 class="sec">Top 3</h3>${ALL.filter(g=>g.id!=="daily"&&g.id!=="review").map(g=>{const l=SCORES[g.id]||[];return `<div class="trow"><span class="nm">${g.name}</span>${l.length?l.map((x,i)=>`<span class="top3" style="margin:0"><span class="p ${["g","s","b"][i]}"><div>${E8.avatarSVG(x.eq)}</div>#${x.nr}</span></span>`).join(""):`<span class="de">Nobody yet – be the first!</span>`}</div>`}).join("")}`;
 }
 
 /* ===== Locker & Shop ===== */
@@ -396,13 +407,15 @@ function pinDialog(first){
 
 /* ===== Tutorial ===== */
 const TOUR = [
-  {sel:null, t:"WELCOME!", p:"This is your English practice zone. Play games, collect coins, level up and dress your avatar. Let's have a quick look!", de:"Hier übst du Englisch mit Spielen, sammelst Münzen und gestaltest deinen Avatar. Kurze Tour!"},
+  {sel:null, t:"WELCOME TO THE HIRSCH GAMES!", p:"This is your English practice zone. Play games, collect coins, level up and dress your avatar. Let's have a quick look!", de:"Hier übst du Englisch mit Spielen, sammelst Münzen und gestaltest deinen Avatar. Kurze Tour!"},
   {sel:"#hero", t:"YOU", p:"This is your avatar. Log in with your <b>number</b> and the <b>4-digit PIN</b> from your teacher. The first time, you choose your <b>own PIN</b>. Without a login you can play, but you get no coins.", de:"Beim ersten Login wählst du deine eigene PIN. Ohne Login kannst du spielen, bekommst aber keine Münzen."},
   {sel:".lobby .feat", t:"YOUR GAME", p:"Here you see the selected game. Press <b>PLAY</b> to start. You can only go on when your answer is right – mistakes come back later.", de:"Mit PLAY startest du. Du kommst nur weiter, wenn alles richtig ist."},
   {sel:"#shelves .shelf:nth-child(2)", t:"ALL GAMES", p:"All games are sorted by unit: vocabulary bosses and grammar missions. Tap a game <b>once</b> to see it, tap it <b>again</b> to play.", de:"Einmal tippen = ansehen, nochmal tippen = spielen. Wische die Reihen zur Seite."},
   {sel:".strip .card[data-id='daily']", t:"DAILY CHALLENGE", p:"Every day there is a new boss with 10 words from all units. Play it every day for extra coins!", de:"Jeden Tag neu – Münzen gibt es einmal am Tag."},
   {sel:"#top", t:"COINS & LEVEL", p:"First time: 20–40 coins (more stars = more coins). Play again and get more stars for more coins. Every coin you win also gives you XP for your <b>level</b>.", de:"Mehr Sterne = mehr Münzen. Mit Münzen steigst du auch im Level auf – Level schalten besondere Shop-Teile frei."},
   {sel:".nav", t:"LOCKER, SHOP & TROPHIES", p:"<b>Shop</b>: buy clothes, hats, pets and crazy effects. <b>Locker</b>: change your look. <b>Trophies</b>: your badges and the top 3 of every game.", de:"Im Shop kaufst du, im Locker ziehst du dich um, bei Trophies siehst du Abzeichen und Bestenlisten."},
+  {sel:".nav button[data-n='home']", t:"YOUR HOME", p:"Build your own house! Your <b>stars</b> make it bigger: tent → hut → house → villa → mansion. With <b>coins</b> you choose walls, roof, windows and garden. You can also visit your classmates' houses.", de:"Sterne lassen dein Haus wachsen, mit Münzen gestaltest du es. Du kannst auch die Häuser der anderen besuchen."},
+  {sel:".strip .card[data-id='review']", t:"MISTAKE BOX", p:"After a vocabulary boss, the words you got wrong go into your <b>mistake box</b>. Beat the Mistake Monster and the words disappear!", de:"Wörter, die du falsch hattest, landen in deiner Fehler-Kiste. Wenn du sie richtig hast, verschwinden sie wieder."},
   {sel:null, t:"ONE LAST THING!", p:"On a school iPad, always press <b>Log out</b> when you are finished. Now – have fun! 🎮", de:"Auf Schul-iPads am Ende immer abmelden! Viel Spaß!"}
 ];
 let TI = 0;
@@ -410,6 +423,7 @@ function tour(){ TI = 0; $("tour").classList.add("show"); window.scrollTo(0,0); 
 function tourEnd(){ $("tour").classList.remove("show"); }
 function tourStep(){
   const s = TOUR[TI], el = s.sel && document.querySelector(s.sel), hole = $("hole"), tip = $("tip");
+  if (s.sel && !el && s.sel.indexOf("review") >= 0) { s.sel = null; }
   if (el) { el.scrollIntoView({block:"center", behavior:"instant"}); }
   setTimeout(() => {
     const vw = innerWidth, vh = innerHeight;
