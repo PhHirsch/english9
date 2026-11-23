@@ -122,6 +122,7 @@ add("y-rhino", "yard", "Rhino", 400, unit=3, kind="rhino")
 add("y-junk", "yard", "Junk boat (Hong Kong)", 450, unit=4, kind="junk")
 add("y-dimsum", "yard", "Dim sum stall", 350, unit=4, kind="dimsum")
 add("y-lanterns", "yard", "Red lanterns", 250, unit=4, kind="lanterns")
+add("y-sneaker", "yard", "Giant sneaker", 300, unit=4, kind="sneaker")
 
 # add("y-taxi", "yard", "Yellow cab (New York)", 300, unit=1, kind="taxi")  # english8 (OL4)
 # add("y-liberty", "yard", "Mini Statue of Liberty", 400, unit=1, kind="liberty")  # english8 (OL4)
