@@ -188,6 +188,8 @@ const SITE = { title: "ENGLISH 9", sub: "ENGLISH 9 · ORANGE LINE 5" };
 window.VOCAB = window.VOCAB || {}; window.COVERS = window.COVERS || {};
 
 /* ===== Spiele (neueste oben). icon = Emoji fürs Cover, falls es in covers.js kein eigenes Cover gibt. Vokabel-Bosse kommen automatisch aus vocab-*.js ===== */
+/* Geschlossen (noch nicht im Unterricht dran): einfach aus der Liste nehmen, um sie zu öffnen */
+const CLOSED = ["pp-blackout", "pp-lighthouse", "jefe-u2"];
 const GRAMMAR = [
   {id:"ifclauses", unit:"u2", file:"hurricane.html", icon:"🌀", topic:"if-clauses", name:"Hurricane Warning", info:"A hurricane is coming! Help the island radio with the right advice.", color:"linear-gradient(135deg,#14203a,#4a6a9a)", accent:"#ffd23a", isNew:true},
   {id:"sp-pp", unit:"u2", file:"fake-or-real.html", icon:"🤳", topic:"Simple past & present perfect", name:"Fake or Real?", info:"Has this influencer really been to the Caribbean? Check the facts!", color:"linear-gradient(135deg,#3a0a5a,#ff4fb0)", accent:"#ff4fb0", isNew:true},
@@ -198,7 +200,7 @@ const GRAMMAR = [
   {id:"rc-carnival", unit:"u2", file:"carnival.html", icon:"🥁", topic:"Relative clauses & contact clauses", name:"Who's Who at the Carnival", info:"The steelpan star has disappeared before the big show. Find him!", color:"linear-gradient(135deg,#5a0f4a,#e0386a)", accent:"#e0386a"},
   {id:"pp-blackout", unit:"u2", file:"blackout.html", icon:"🔦", topic:"Past progressive", name:"Blackout at Hollow Lane", info:"The lights went out – and a laptop disappeared. Who is lying?", color:"linear-gradient(135deg,#2a1f4a,#7a4a1e)"},
   {id:"pp-lighthouse", unit:"u2", file:"lighthouse.html", icon:"⛈️", topic:"Past progressive & simple past", name:"Lighthouse Logbook", info:"Save the Sea Star from the rocks!", color:"linear-gradient(135deg,#0f3247,#1a6a8a)"}
-];
+].filter(g => CLOSED.indexOf(g.id) < 0);
 /* Überschriften der Units ohne Vokabeldatei (Schlüssel wie GRAMMAR.unit) */
 const UNITS = {u1:"Unit 1 · Exploring Australia", u2:"Unit 2 · Colourful Caribbean", u3:"Unit 3 · Around South Africa", u4:"Unit 4 · Living in Hong Kong"};
 const BOSSCOL = {"tornado":["#3a4256","#6a7a96"],"robot":["#2a3a4a","#4a6a8a"],"ghost":["#2a2a5a","#5a5aa0"],"bossy":["#5a1e1a","#a0402a"],"slime":["#1e4a24","#3f8a2a"],"manager":["#2e1d5a","#6a3cb0"],"locker":["#12305a","#2a68b8"],"volcano":["#4a1a10","#b0441a"],"pirate":["#1a1416","#7a1e22"]};
@@ -221,7 +223,7 @@ if (Object.values(VOCAB).some(u => u.sections && u.sections.length)) {
   const u = VOCAB[key], title = (u && u.unit) || UNITS[key] || key, gr = GRAMMAR.filter(g => g.unit === key);
   if (gr.length) { SHELVES.push({key:key+"-g", title:title, sub:"Grammar missions"});
     const BU = {u1:["🐊","The Croc King"], u2:["🐙","The Kraken"]}[key];
-    if (BU) BOSSCARDS.push({id:"jefe-"+key, href:"jefe-final.html?u="+key.slice(1), topic:"Final boss · "+title, name:BU[1], bicon:BU[0], info:`The final boss of ${title}! 3 phases, harder and harder – everything from the unit. Perfect before the test. – Endgegner: ideal vor der Klassenarbeit.`, art:`<svg viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="bg${key}" cx=".5" cy="1.1" r=".9"><stop offset="0" stop-color="#ff5a2a"/><stop offset="1" stop-color="#1a0404"/></radialGradient></defs><rect width="220" height="140" rx="10" fill="url(#bg${key})"/><text x="110" y="98" font-size="74" text-anchor="middle">${BU[0]}</text><rect x="40" y="14" width="140" height="10" rx="5" fill="#0008" stroke="#ff5a2a"/><rect x="42" y="16" width="96" height="6" rx="3" fill="#ff3a2a"/><text x="110" y="128" font-family="Arial Black,Impact" font-size="13" fill="#ffd23a" text-anchor="middle">FINAL BOSS</text></svg>`, accent:"#ff3a2a", color:"linear-gradient(135deg,#3a0a0a,#ff3a2a)", shelf:key+"-g", isNew:true, boss:true});
+    if (BU && CLOSED.indexOf("jefe-"+key) < 0) BOSSCARDS.push({id:"jefe-"+key, href:"jefe-final.html?u="+key.slice(1), topic:"Final boss · "+title, name:BU[1], bicon:BU[0], info:`The final boss of ${title}! 3 phases, harder and harder – everything from the unit. Perfect before the test. – Endgegner: ideal vor der Klassenarbeit.`, art:`<svg viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="bg${key}" cx=".5" cy="1.1" r=".9"><stop offset="0" stop-color="#ff5a2a"/><stop offset="1" stop-color="#1a0404"/></radialGradient></defs><rect width="220" height="140" rx="10" fill="url(#bg${key})"/><text x="110" y="98" font-size="74" text-anchor="middle">${BU[0]}</text><rect x="40" y="14" width="140" height="10" rx="5" fill="#0008" stroke="#ff5a2a"/><rect x="42" y="16" width="96" height="6" rx="3" fill="#ff3a2a"/><text x="110" y="128" font-family="Arial Black,Impact" font-size="13" fill="#ffd23a" text-anchor="middle">FINAL BOSS</text></svg>`, accent:"#ff3a2a", color:"linear-gradient(135deg,#3a0a0a,#ff3a2a)", shelf:key+"-g", isNew:true, boss:true});
     gr.forEach(g => ALL.push({id:g.id, href:g.file, topic:g.topic, name:g.name, info:g.info, art:COVER(g), accent:ACC(g), color:g.color, shelf:key+"-g", isNew:g.isNew})); }
   if (u && u.sections.length) {
     SHELVES.push({key:key+"-v", title:title, sub:"Vocabulary bosses"});

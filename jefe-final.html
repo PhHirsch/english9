@@ -83,6 +83,8 @@ const BOSSES = {
       { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["While", "we", "sailed,", "the", "Kraken", "appeared."], bad: 2, opts: ["were sailing,", "sailed,", "was sailing,"], fix: "were sailing,", hint: "While + long action → were sailing." },
       { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["The", "sea", "was", "calm", "when", "the", "Kraken", "was appearing."], bad: 7, opts: ["appeared.", "was appearing.", "appear."], fix: "appeared.", hint: "when + short action → simple past: appeared." }] }] }
 };
+/* Geschlossen (Past progressive noch nicht dran) – zum Öffnen die Zeile löschen */
+delete BOSSES[2];
 const U = +new URLSearchParams(location.search).get("u"), B = BOSSES[U];
 if (!B) {
   const se = E8.getSession(), st = se && se.state ? se.state.stars || {} : {};
