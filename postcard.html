@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>The Postcard Trail · The Hirsch Games</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root{--bg:radial-gradient(ellipse at 50% 0%,#4a2a10 0%,#160a04 70%);--panel:#22140a;--txt:#fff6ea;--muted:#e0c2a0;--line:#5a3a1e;--btn:#30200f;--accent:#ff9a3a;--accentTxt:#2a1200;--accent2:#ffd08f;--bubble:#33200f;--input:#170d05;--ok:#6fe59a;--bad:#ff8a6a}
+  .tv{position:relative;border-radius:14px 14px 0 0;overflow:hidden;background:linear-gradient(135deg,#8a4a14,#3a1a06);padding:14px 16px;display:flex;align-items:center;gap:14px}
+  .tv .logo{font-family:Georgia,serif;font-style:italic;font-size:26px;line-height:1;color:#fff0d8;text-shadow:0 2px 0 #6a2a00,0 0 18px #ff9a3a}
+  .tv .logo small{display:block;font-size:13px;font-style:normal;letter-spacing:.2em;color:#ffd08f;margin-top:4px}
+  .tv .cast{margin-left:auto;display:flex;gap:6px;font-size:28px}
+  .tv .cast span{width:44px;height:44px;border-radius:50%;background:#fff1;display:grid;place-items:center;border:2px solid #ff9a3a}
+  .tv .cast span.me{overflow:hidden;background:#fff}
+  .tv .cast span.me svg{width:44px;height:44px}
+  .prog{height:6px;background:#2a1406}.prog i{display:block;height:100%;background:linear-gradient(90deg,#ff9a3a,#ffd23a)}
+  .story p{margin:.45em 0;line-height:1.55}
+  .story .d{display:flex;gap:8px;align-items:flex-start;margin:.4em 0}
+  .story .d b{flex:none;min-width:62px;color:#ffd08f}
+  .story .gl{border-bottom:1px dotted #ffd08f;cursor:help}
+  .story .card{background:#fff8e6;color:#3a2a10;border-radius:4px;padding:10px 14px;font-family:"Comic Sans MS","Bradley Hand",cursive;transform:rotate(-1deg);box-shadow:0 2px 6px #0006;margin:.6em 0;display:block;max-width:520px;border-left:6px solid #d84a3a}
+  .story .card .pic{font-size:30px;float:right;margin-left:10px}
+  .story .msg{background:#123a2a;color:#d8ffe8;border-radius:12px;padding:8px 12px;margin:.5em 0;display:inline-block;max-width:520px}
+  .eps{display:grid;gap:12px;margin:14px 0}
+  .ep{display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#3a1e0a,#7a3e14);border:1px solid #9a5a2a;border-radius:14px;padding:14px;color:#fff;text-decoration:none}
+  .ep .n{font-family:Georgia,serif;font-size:34px;font-style:italic;color:#ffd08f;width:44px;text-align:center}
+  .ep b{font-size:19px}
+  .ep.lock{filter:grayscale(.8);opacity:.55;pointer-events:none}
+  body{margin:0;min-height:100vh;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:17px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px}
+  .de{color:var(--muted);font-size:14px}
+  .btn{display:inline-block;padding:10px 18px;border-radius:12px;background:var(--accent);color:#2a1200;text-decoration:none;font-weight:700}
+  .ep .st{margin-left:auto;font-size:18px;color:#ffd23a;white-space:nowrap}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script src="game.js?v=11"></script>
+<script src="juego.js?v=1"></script>
+<script>
+/* ======== Freischalten: Zahl erhöhen, wenn das nächste Kapitel erscheinen soll ======== */
+const UNLOCKED = 2;
+
+const g = (w, de) => `<span class="gl" title="${de}">${w}</span> <span class="de">(${de})</span>`;
+const d = (who, t) => `<div class="d"><b>${who}:</b><span>${t}</span></div>`;
+const TF = (q, a, why) => ({ t: "choice", q: q, task: "True or false?", taskDe: "Richtig oder falsch?", keep: true, opts: ["true ✔", "false ✘"], a: a ? "true ✔" : "false ✘", hint: why });
+
+const EPS = [
+ { n: 1, unit: "Unit 1 · Australia", title: "A Postcard from Nowhere", teaser: "Mia's uncle has disappeared. Six months later, a postcard arrives …",
+   parts: [
+   { title: "The postcard",
+     text: `<p>Mia Clarke is fifteen. She lives with her mum in a small flat near Bondi Beach in Sydney. Her favourite person in the world is her uncle Jack, a nature photographer. Jack has travelled all over Australia and taken thousands of photos of animals.</p>
+       <p>But six months ago Jack ${g("disappeared", "verschwand")}. The police found his car in the desert near Uluru – with his camera bag, but without Jack. Nobody has heard from him since then.</p>
+       <p>Today, when Mia comes home from school, there is a postcard in the letterbox. The picture shows a sea turtle on the Great Barrier Reef. There is no name on it – only one letter.</p>
+       <div class="card"><span class="pic">🐢</span>Mia – I'm safe. Please don't tell the police or anyone else. Go to the place where we saw the turtles. Look under the blue bench. – J.</div>
+       ${d("Mia", "Jack! He's alive! 😮")}`,
+     tasks: [
+       { t: "choice", q: "Who is Jack?", opts: ["Mia's uncle", "Mia's dad", "Mia's teacher"], a: "Mia's uncle", hint: "„… her uncle Jack, a nature photographer.“" },
+       { t: "choice", q: "What is Jack's job?", opts: ["He is a nature photographer.", "He is a police officer.", "He is a diver."], a: "He is a nature photographer.", hint: "„… her uncle Jack, a nature photographer.“" },
+       { t: "choice", q: "Where did the police find Jack's car?", opts: ["in the desert near Uluru", "at Bondi Beach", "on the Great Barrier Reef"], a: "in the desert near Uluru", hint: "„The police found his car in the desert near Uluru.“" },
+       TF("The police know that Jack is safe.", false, "Jack writes: „Please don't tell the police.“ – Nobody has heard from him."),
+       { t: "choice", q: "What is on the postcard picture?", opts: ["a sea turtle", "a kangaroo", "Uluru"], a: "a sea turtle", hint: "„The picture shows a sea turtle …“" },
+       { t: "order", task: "What does Jack write?", taskDe: "Sag es nicht der Polizei.", words: ["Don't", "tell", "the", "police."], a: "Don't tell the police." }
+     ] },
+   { title: "The blue bench",
+     text: `<p>Mia calls her best friend Ben. Ben is sixteen and he loves surfing.</p>
+       ${d("Ben", "The place where you saw the turtles? Where was that?")}
+       ${d("Mia", "When I was ten, Jack took me to the aquarium in Darling Harbour. We sat on a blue bench in front of the turtle tank for hours. There was an old turtle called Shelly. Jack loved her!")}
+       <p>The next morning they take the train to Darling Harbour. In front of the turtle tank there is still the blue bench. Mia looks under it. Something is ${g("taped", "festgeklebt")} to the wood: a small envelope. Inside there is a USB stick with a label – <b>CARIBBEAN</b> – and an old key with the number <b>27</b>.</p>
+       <p>When they leave the aquarium, Ben suddenly stops.</p>
+       ${d("Ben", "Mia, don't turn around. There's a man in a grey cap. He has followed us since the station.")}`,
+     tasks: [
+       { t: "choice", q: "Who is Ben?", opts: ["Mia's best friend", "Mia's brother", "Jack's son"], a: "Mia's best friend", hint: "„Mia calls her best friend Ben.“" },
+       { t: "choice", q: "Where did Mia and Jack see the turtles?", opts: ["at the aquarium in Darling Harbour", "at Bondi Beach", "near Uluru"], a: "at the aquarium in Darling Harbour", hint: "„Jack took me to the aquarium in Darling Harbour.“" },
+       { t: "choice", q: "What was the name of the old turtle?", opts: ["Shelly", "Bondi", "Jackie"], a: "Shelly", hint: "„There was an old turtle called Shelly.“" },
+       { t: "choice", q: "What is in the envelope?", opts: ["a USB stick and a key", "a letter and a photo", "money and a ticket"], a: "a USB stick and a key", hint: "„Inside there is a USB stick … and an old key …“" },
+       TF("The number on the key is 72.", false, "The key has the number 27."),
+       TF("A man in a grey cap has followed Mia and Ben since the station.", true, "„He has followed us since the station.“")
+     ] }],
+   end: "Who is the man in the grey cap? And what is on the USB stick? 🔑 – To be continued …" },
+
+ { n: 2, unit: "Unit 2 · Caribbean", title: "The Steelpan Code", teaser: "A secret video, a cousin in Trinidad – and locker number 27.",
+   parts: [
+   { title: "The video",
+     text: `<p>At home, Mia and Ben look at the USB stick. There are hundreds of colourful photos from the carnival in Trinidad – steelpan bands, dancers in ${g("costumes", "Kostümen")} – and one video. In the video, Jack is sitting in a dark room. He looks tired.</p>
+       ${d("Jack", "Mia, if you see this, I need your help. I took photos of something that dangerous people want to have. I can't go to the police yet. I have hidden the photos in four different places. Part two is in Port of Spain, in Trinidad. The key will help you. Be careful – and trust nobody in a grey cap.")}
+       ${d("Mia", "Trinidad? That's on the other side of the world! How can we get there?")}
+       ${d("Ben", "We don't have to. My cousin Kayla lives in Port of Spain! My mum is from Trinidad, remember? Let's call her.")}`,
+     tasks: [
+       { t: "choice", q: "What photos are on the USB stick?", opts: ["photos from the carnival in Trinidad", "photos of turtles", "photos of Mia's family"], a: "photos from the carnival in Trinidad", hint: "„… colourful photos from the carnival in Trinidad …“" },
+       { t: "choice", q: "Why can't Jack go to the police?", opts: ["Dangerous people want his photos.", "He has lost his passport.", "He is ill."], a: "Dangerous people want his photos.", hint: "„I took photos of something that dangerous people want to have.“" },
+       TF("Jack has hidden the photos in four different places.", true, "„I have hidden the photos in four different places.“"),
+       { t: "choice", q: "Where is part two?", opts: ["in Port of Spain, Trinidad", "in Sydney", "in Cape Town"], a: "in Port of Spain, Trinidad", hint: "„Part two is in Port of Spain, in Trinidad.“" },
+       { t: "choice", q: "Who is Kayla?", opts: ["Ben's cousin", "Mia's aunt", "Jack's friend"], a: "Ben's cousin", hint: "„My cousin Kayla lives in Port of Spain!“" }
+     ] },
+   { title: "Locker 27",
+     text: `<p>Kayla is seventeen and she plays the steelpan in a band. On a video call, Mia shows her the key with the number 27.</p>
+       ${d("Kayla", "Number 27? Every band house has lockers with numbers. I'll ask around.")}
+       <p>Two days later Kayla calls back. She is in an old band house near the harbour. An old man, the band leader, is standing next to her.</p>
+       ${d("Kayla", "Your uncle was here last year! He rented locker 27. But the band leader says he will only open it for “the girl who knows the turtle”.")}
+       ${d("Band leader", "Jack told me a question. What was the name of the old turtle?")}
+       ${d("Mia", "Shelly! Her name was Shelly!")}
+       <p>The band leader smiles and opens the locker. Inside there is a photo of a big ship in the harbour of Cape Town, South Africa – and a note: <b>“Ask for Thandi. – J.”</b></p>
+       <p>Suddenly Kayla looks out of the window. Her face goes white.</p>
+       ${d("Kayla", "Mia … there's a man outside. He's wearing a grey cap with the letters <b>GW</b> on it.")}`,
+     tasks: [
+       { t: "choice", q: "What does Kayla play?", opts: ["the steelpan", "the guitar", "football"], a: "the steelpan", hint: "„… she plays the steelpan in a band.“" },
+       { t: "choice", q: "Who will the band leader open the locker for?", opts: ["the girl who knows the turtle", "the boy who plays the steelpan", "the man in the grey cap"], a: "the girl who knows the turtle", hint: "„… “the girl who knows the turtle”.“" },
+       { t: "choice", q: "What is in the locker?", opts: ["a photo of a ship in Cape Town and a note", "a USB stick and a key", "Jack's camera"], a: "a photo of a ship in Cape Town and a note", hint: "„Inside there is a photo of a big ship in the harbour of Cape Town … and a note.“" },
+       TF("Jack rented locker 27 last year.", true, "„He rented locker 27.“"),
+       { t: "order", task: "What does the note say?", taskDe: "Frag nach Thandi.", words: ["Ask", "for", "Thandi."], a: "Ask for Thandi." },
+       { t: "choice", q: "What letters are on the man's cap?", opts: ["GW", "JC", "SA"], a: "GW", hint: "„… a grey cap with the letters GW on it.“" }
+     ] }],
+   end: "Who is Thandi? And what does “GW” mean? 🧢 – To be continued …" },
+
+ { n: 3, unit: "Unit 3 · South Africa", title: "Thandi's Secret", teaser: "A ranger in Kruger National Park knows what Jack has seen …",
+   parts: [
+   { title: "The ranger",
+     text: `<p>Mia searches the internet for “Thandi” and “Jack Clarke”. She finds an old article about a nature reserve in South Africa: Kruger National Park. On a photo, Jack is standing next to a young woman in a ranger uniform. Her name is Thandi Mokoena.</p>
+       <p>Mia writes her an email. The next day, Thandi answers with a video call. She is sitting in a jeep. Behind her, Mia can see a rhino.</p>
+       ${d("Thandi", "So you are Mia! Jack told me a lot about you. Yes, he was here last year. He wanted to take photos of rhinos. But one night he saw something terrible: people were killing rhinos for their horns.")}
+       ${d("Mia", "Poachers? 😨")}
+       ${d("Thandi", `Yes, ${g("poachers", "Wilderer")}. And Jack took photos of the boss. The horns were taken to a ship in Cape Town. The ship belongs to a company called GreyWolf Trading. Their logo is “GW”.`)}`,
+     tasks: [
+       { t: "choice", q: "Where does Thandi work?", opts: ["in Kruger National Park", "in Cape Town harbour", "at a school in Sydney"], a: "in Kruger National Park", hint: "„… a nature reserve in South Africa: Kruger National Park.“" },
+       { t: "choice", q: "What is Thandi's job?", opts: ["She is a ranger.", "She is a photographer.", "She is a police officer."], a: "She is a ranger.", hint: "„… a young woman in a ranger uniform.“" },
+       { t: "choice", q: "What did Jack see one night?", opts: ["people who were killing rhinos", "a big storm", "a lost tourist"], a: "people who were killing rhinos", hint: "„People were killing rhinos for their horns.“" },
+       TF("The horns were taken to a ship in Cape Town.", true, "„The horns were taken to a ship in Cape Town.“"),
+       { t: "choice", q: "What does “GW” stand for?", opts: ["GreyWolf Trading", "Great Wildlife", "Green World"], a: "GreyWolf Trading", hint: "„… a company called GreyWolf Trading. Their logo is “GW”.“" }
+     ] },
+   { title: "A message from Hong Kong",
+     text: `<p>Thandi drives to her office and opens a ${g("safe", "Tresor")}. Inside there is a memory card from Jack's camera.</p>
+       ${d("Thandi", "Jack gave me this before he left. These are the photos of the poachers. But the photos of the boss aren't here. Jack said: “The last part is where east meets west.”")}
+       ${d("Ben", "Where east meets west … that's Hong Kong! My geography teacher always says that.")}
+       <p>That night, Mia gets a text message from an unknown number.</p>
+       <div class="msg">📱 Mia, you were great! I'm in Hong Kong. I need the photos from Thandi and Kayla. Come to the Star Ferry pier on Friday at 6 pm. Bring your mum. – Jack</div>
+       ${d("Mia", "It's Jack! … But wait. How does he have my new number? I only got this phone last week …")}`,
+     tasks: [
+       { t: "choice", q: "What is in Thandi's safe?", opts: ["a memory card from Jack's camera", "a rhino horn", "a letter from Mia"], a: "a memory card from Jack's camera", hint: "„Inside there is a memory card from Jack's camera.“" },
+       TF("The photos of the boss are on Thandi's memory card.", false, "„The photos of the boss aren't here.“"),
+       { t: "choice", q: "Where is “where east meets west”, according to Ben?", opts: ["Hong Kong", "Cape Town", "Trinidad"], a: "Hong Kong", hint: "„… that's Hong Kong!“" },
+       { t: "choice", q: "Where should Mia go on Friday?", opts: ["to the Star Ferry pier", "to the aquarium", "to the police station"], a: "to the Star Ferry pier", hint: "„Come to the Star Ferry pier on Friday at 6 pm.“" },
+       { t: "choice", q: "Why is Mia worried at the end?", opts: ["Jack doesn't know her new number.", "She doesn't have a passport.", "Her mum is ill."], a: "Jack doesn't know her new number.", hint: "„How does he have my new number? I only got this phone last week …“" }
+     ] }],
+   end: "Is the message really from Jack – or is it a trap? 📱 – To be continued …" },
+
+ { n: 4, unit: "Unit 4 · Hong Kong", title: "Where East Meets West", teaser: "The Star Ferry, a man in a grey cap – and the last postcard.",
+   parts: [
+   { title: "At the Star Ferry",
+     text: `<p>Mia tells her mum everything. At first her mum is angry, but then she says: “We're going to Hong Kong together – and we're telling the police.” A police officer from Sydney, Inspector Lee, flies with them.</p>
+       <p>Hong Kong is huge: skyscrapers, neon signs, markets and thousands of people. On Friday at 6 pm Mia waits at the Star Ferry pier. Her mum and Inspector Lee are watching from a café.</p>
+       <p>A man walks towards Mia. It isn't Jack. It's the man with the grey cap.</p>
+       ${d("Man", "Give me the memory cards, girl. Now.")}
+       ${d("Mia", "I don't have them here.")}
+       <p>The man grabs Mia's bag – but at that moment Inspector Lee and two Hong Kong police officers stop him. He tries to run, but there is nowhere to go.</p>`,
+     tasks: [
+       { t: "choice", q: "Who goes to Hong Kong with Mia?", opts: ["her mum and Inspector Lee", "Ben and Kayla", "Thandi"], a: "her mum and Inspector Lee", hint: "„A police officer from Sydney, Inspector Lee, flies with them.“" },
+       { t: "choice", q: "Who comes to the Star Ferry pier?", opts: ["the man with the grey cap", "Jack", "Ben"], a: "the man with the grey cap", hint: "„It isn't Jack. It's the man with the grey cap.“" },
+       TF("Mia has the memory cards in her bag.", false, "„I don't have them here.“"),
+       { t: "choice", q: "What happens to the man?", opts: ["The police stop him.", "He gets away.", "He takes the ferry."], a: "The police stop him.", hint: "„… Inspector Lee and two Hong Kong police officers stop him.“" },
+       { t: "order", task: "What does Mia's mum say?", taskDe: "Wir fahren zusammen nach Hong Kong.", words: ["We're", "going", "to", "Hong", "Kong", "together."], a: "We're going to Hong Kong together." }
+     ] },
+   { title: "The last postcard",
+     text: `<p>At the police station, the man in the grey cap tells the police everything. He works for GreyWolf Trading. He sent the text message, not Jack.</p>
+       <p>Later that evening someone knocks on the door of the hotel room. Mia opens it. A tall man with a beard is standing there. He is thinner than before, but he is smiling.</p>
+       ${d("Mia", "JACK! 🥹")}
+       ${d("Jack", "I'm so sorry, Mia. I was hiding in Hong Kong. I couldn't call you – they were watching your phone. But you found everything. You are the best detective in the world!")}
+       <p>Jack gives the last memory card to Inspector Lee: photos of the boss of GreyWolf Trading. Two weeks later the boss is arrested in Cape Town. Thandi sends a photo: a baby rhino in Kruger National Park. 🦏</p>
+       <p>Back in Sydney, there is one more postcard in Mia's letterbox. It shows a turtle.</p>
+       <div class="card"><span class="pic">🐢</span>Thank you, Mia. Next summer: you, me, Ben and Kayla – a trip around the world? This time without grey caps. 😉 – J.</div>`,
+     tasks: [
+       { t: "choice", q: "Who really sent the text message?", opts: ["the man in the grey cap", "Jack", "Thandi"], a: "the man in the grey cap", hint: "„He sent the text message, not Jack.“" },
+       { t: "choice", q: "Why couldn't Jack call Mia?", opts: ["They were watching her phone.", "He lost his phone.", "He didn't know her number."], a: "They were watching her phone.", hint: "„I couldn't call you – they were watching your phone.“" },
+       TF("Jack looks thinner than before.", true, "„He is thinner than before, but he is smiling.“"),
+       { t: "choice", q: "What happens to the boss of GreyWolf Trading?", opts: ["He is arrested in Cape Town.", "He escapes to Trinidad.", "He buys a new ship."], a: "He is arrested in Cape Town.", hint: "„Two weeks later the boss is arrested in Cape Town.“" },
+       { t: "choice", q: "What does Jack suggest on the last postcard?", opts: ["a trip around the world", "a new job for Mia", "a party in Hong Kong"], a: "a trip around the world", hint: "„… a trip around the world?“" }
+     ] }],
+   end: "The End – or the start of a new adventure? 🌏 Thank you for following the Postcard Trail!" }
+];
+
+const q = new URLSearchParams(location.search), EP = EPS.find(e => e.n === +q.get("ep"));
+if (!EP || EP.n > UNLOCKED) {
+  const se = E8.getSession(), st = se && se.state ? se.state.stars || {} : {};
+  document.getElementById("app").innerHTML = `<div class="panel" style="max-width:720px;margin:20px auto;padding:18px">
+    <a href="index.html" style="color:#ffd08f">← Lobby</a>
+    <div class="tv" style="margin-top:10px;border-radius:14px"><div class="logo">The Postcard<br>Trail<small>A MYSTERY IN CHAPTERS</small></div><div class="cast"><span>👧🏼</span><span>🏄🏽‍♂️</span><span>🐢</span><span>📮</span></div></div>
+    <p>Mia's uncle Jack has disappeared. Then the postcards start to arrive … Read each chapter and answer the questions. A new chapter appears when your teacher unlocks it!</p>
+    <p class="de">Lies jedes Kapitel und beantworte die Fragen. Neue Kapitel schaltet deine Lehrkraft frei – bleib dran!</p>
+    <div class="eps">${EPS.map(e => { const lock = e.n > UNLOCKED, s = st["post-" + e.n] || 0;
+      return `<a class="ep ${lock ? "lock" : ""}" href="?ep=${e.n}"><span class="n">${e.n}</span><span><b>${lock ? "🔒 " : ""}${e.title}</b><br><span class="de">${e.unit} · ${lock ? "Coming soon … – bald" : e.teaser}</span></span><span class="st">${lock ? "" : s ? "★".repeat(s) + "☆".repeat(3 - s) : "NEW"}</span></a>`; }).join("")}</div></div>`;
+} else {
+  JUEGO.start({
+    id: "post-" + EP.n, key: "e9-post-" + EP.n, icon: "📮", topic: "The Postcard Trail · Chapter " + EP.n, title: EP.title,
+    intro: `<p><b>Chapter ${EP.n}</b> · ${EP.teaser}</p><p class="de">Lies den Text genau – er bleibt bei den Fragen sichtbar. Schwierige Wörter haben eine Übersetzung in Klammern.</p>`,
+    goLabel: "▶ Start the chapter!", time: "about 10 minutes",
+    stages: EP.parts.map((p, i) => ({ label: "Part " + (i + 1), title: p.title, go: "📖 Let's read!",
+      intro: `<div class="story">${p.text}</div><p class="de">Lies den Text. Danach kommen Fragen – der Text bleibt oben sichtbar.</p>`,
+      memo: `<div class="story">${p.text}</div>`, pista: "Look for the answer in the text. – Die Wörter aus der Frage stehen meistens auch im Text.", tasks: p.tasks })),
+    scene: (S) => `<div class="tv"><div class="logo">The Postcard<br>Trail<small>CHAPTER ${EP.n}</small></div><div class="cast"><span>👧🏼</span><span>🏄🏽‍♂️</span>${["", "<span>🐢</span>", "<span>🥁</span>", "<span>🦏</span>", "<span>⛴️</span>"][EP.n]}<span class="me">${E8.myAvatar()}</span></div></div>
+      <div class="prog"><i style="width:${S.done ? 100 : Math.round(S.solved / S.total * 100)}%"></i></div>`,
+    outro: `<div style="font-size:56px">📮🌏</div><h1>End of chapter ${EP.n}</h1><p style="font-size:20px">${EP.end}</p>
+      <p class="de">${EP.n < UNLOCKED ? "Das nächste Kapitel ist schon da!" : EP.n < EPS.length ? "Das nächste Kapitel schaltet deine Lehrkraft bald frei." : ""}</p><p><a class="btn" href="postcard.html">📮 All chapters</a></p>`
+  });
+}
+</script>
+</body>
+</html>

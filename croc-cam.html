@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Croc Cam · The Hirsch Games</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root{--bg:radial-gradient(ellipse at 50% 0%,#1e4a1e 0%,#061206 70%);--panel:#0c1e0c;--txt:#f0ffe8;--muted:#a8d49a;--line:#2a4e22;--btn:#132a10;--accent:#ff3b3b;--accentTxt:#fff;--accent2:#b8f07a;--bubble:#163414;--input:#071207;--ok:#8af07a;--bad:#ffb03a}
+  .track{position:relative;height:150px;overflow:hidden;background:linear-gradient(#9ad8a0 0%,#d8f0b0 45%,#3a6a3a 45%,#4a7a5a 70%,#2a5a6a 100%)}
+  .track .goal{position:absolute;right:14px;top:30px;font-size:54px}
+  .track .start{position:absolute;left:12px;bottom:10px;font-size:34px}
+  .track .path{position:absolute;left:40px;right:80px;bottom:34px;border-top:3px dashed rgba(255,255,255,.45)}
+  .track .me{position:absolute;bottom:22px;width:56px;height:56px;border-radius:50%;overflow:hidden;border:3px solid var(--accent);background:#fff;transition:left .8s;box-shadow:0 4px 14px #0007}
+  .track .me svg{width:100%;height:100%}
+  .track .deco{position:absolute;font-size:26px;opacity:.9}
+  .hud{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:14px;color:var(--accent2);background:rgba(0,0,0,.35);border-top:1px solid var(--line)}
+  .hud b{color:var(--accent)}
+  .card3{display:inline-block;vertical-align:top;background:var(--bubble);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:4px;min-width:170px;font-size:15px}
+  .card3 b{font-size:17px}
+
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script src="game.js?v=11"></script>
+<script src="juego.js?v=1"></script>
+<script>
+const SCENE = (S, o) => { const p = S.done ? 1 : S.solved / S.total;
+  return `<div class="track">${(o.deco||[]).map(d => `<span class="deco" style="left:${d[0]}%;top:${d[1]}px">${d[2]}</span>`).join("")}<span class="start">${o.start}</span><span class="goal">${o.goal}</span><div class="path"></div>
+    <div class="me" style="left:calc(40px + (100% - 180px) * ${p.toFixed(3)})">${E8.myAvatar()}</div></div>
+    <div class="hud"><span>${o.label}</span><span><b>${Math.round(p * 100)} %</b> ${o.unit || ""}</span></div>`; };
+const Z = {face:"👩🏻‍💻", name:"Zoe (producer)"};
+JUEGO.start({
+  id: "adverbs", key: "e9-croccam", icon: "🐊", topic: "Adjectives & adverbs", title: "Croc Cam",
+  intro: `<p>🎬 You are the new voice of <b>“Croc Cam”</b>, a nature show from Kakadu National Park in Australia. A camera on a little boat films the animals on the river – and you tell the viewers <b>what the animals are like</b> and <b>how they do things</b>.</p>
+    <p>Your producer <b>Zoe</b> is listening to every word. The show is live! 🔴 And somewhere in the water there's a giant crocodile called <b>Big Bruce</b> …</p>
+    <p class="de">Du sprichst den Kommentar einer Tiersendung. Adjektiv (wie jemand/etwas ist) oder Adverb (wie jemand etwas tut)?</p>`,
+  goLabel: "🎬 Action!", time: "about 20 minutes",
+  rulesLabel: "The rules",
+  rules: `<h2>Adjective or adverb?</h2>
+    <div class="rule"><b>Adjective</b> → says what a person/thing is like: <span class="ex">a <b>slow</b> crocodile · The crocodile is <b>slow</b>.</span></div>
+    <div class="rule"><b>Adverb</b> → says <b>how</b> somebody does something (goes with a verb): <span class="ex">The crocodile moves <b>slowly</b>.</span></div>
+    <div class="rule"><b>Form:</b> adjective + <b>-ly</b>: quiet → quiet<b>ly</b> · careful → careful<b>ly</b> · happy → happ<b>ily</b> (y → i) · terrible → terrib<b>ly</b><br><b>Irregular:</b> good → <b>well</b> · fast → <b>fast</b> · hard → <b>hard</b></div>`,
+  stages: [
+    { label: "Scene 1", title: "Lights, camera …", go: "🎥 Start filming",
+      memo: `🎙️ “Look at this <b>slow</b> crocodile. It moves <b>slowly</b> through the water. The kookaburra is <b>loud</b> – it laughs <b>loudly</b>. The young wallaby is a <b>good</b> jumper – it jumps really <b>well</b>!”`,
+      intro: `<div class="who"><div class="face">👩🏻‍💻</div><div><b class="n">Zoe</b>Here's the script from last week's show. Look at the words in bold. What's the difference?</div></div>
+        <div class="rule">🎙️ “Look at this <b>slow</b> crocodile. It moves <b>slowly</b> through the water. The kookaburra is <b>loud</b> – it laughs <b>loudly</b>. The young wallaby is a <b>good</b> jumper – it jumps really <b>well</b>!”</div>
+        <p class="de">Vergleiche: slow – slowly, loud – loudly, good – well. Wann steht welches Wort?</p>`,
+      pista: "Look at the script: Which words come after “is / a”? Which words come after a verb (moves, laughs, jumps)?",
+      tasks: [
+        { t: "choice", who: Z, q: "The crocodile is ___.", opts: ["slow", "slowly"], keep: true, a: "slow", hint: "After „is“: adjective → slow." },
+        { t: "choice", who: Z, q: "It moves ___ through the water.", opts: ["slow", "slowly"], keep: true, a: "slowly", hint: "How does it move? → adverb: slowly." },
+        { t: "choice", q: "What does an <b>adverb</b> say?", keep: true, opts: ["how somebody does something", "what a thing is like"], a: "how somebody does something", hint: "Adverb → how somebody does something (with a verb)." },
+        { t: "choice", q: "How do you make most adverbs?", keep: true, opts: ["adjective + -ly", "adjective + -er", "more + adjective"], a: "adjective + -ly", hint: "slow → slowly, loud → loudly." },
+        { t: "choice", who: Z, q: "The wallaby is a good jumper. It jumps very ___.", opts: ["well", "good", "goodly"], a: "well", hint: "good → well (irregular adverb)." }
+      ] },
+    { label: "Scene 2", title: "The word board", shuffle: true,
+      memo: `📌 adjective: what sb/sth is like · adverb: how sb does sth · good → well`,
+      intro: `<p>Zoe has a word board next to the camera. Help her sort the words so you can find them quickly during the show.</p>`,
+      tasks: [
+        { t: "sort", who: Z, task: "Adjective or adverb?", taskDe: "Adjektiv oder Adverb?", buckets: ["adjective", "adverb"],
+          items: [["quiet", 0], ["quietly", 1], ["careful", 0], ["carefully", 1], ["happy", 0], ["happily", 1], ["good", 0], ["well", 1], ["dangerous", 0], ["dangerously", 1]],
+          why: {0: "No -ly → adjective (what sth is like).", 1: "-ly / well → adverb (how sb does sth)."} }
+      ] },
+    { label: "Scene 3", title: "On the river", shuffle: true,
+      memo: `📌 + <b>-ly</b>: quick → quickly · careful → carefu<b>lly</b> · happy → happ<b>ily</b> · beautiful → beautifu<b>lly</b> · good → <b>well</b> · fast → <b>fast</b>`,
+      intro: `<div class="who"><div class="face">👩🏻‍💻</div><div><b class="n">Zoe</b>We're live in 3 … 2 … 1! The animals are moving – tell the viewers HOW they do things!</div></div>`,
+      pista: "Make an adverb: adjective + -ly. Careful with y → ily and the irregular ones (good → well, fast → fast).",
+      tasks: [
+        { t: "type", who: Z, q: "The kangaroo jumps ___ over the grass. (quick)", a: "quickly" },
+        { t: "type", who: Z, q: "Listen! The bird sings ___. (beautiful)", a: "beautifully", tips: { "beautifuly": "beautiful + ly → beautifully (two l)." } },
+        { t: "type", who: Z, q: "A snake moves ___ through the leaves. (silent)", a: "silently" },
+        { t: "type", who: Z, q: "The koala is sleeping ___ in the tree. (happy)", a: "happily", tips: { "happyly": "y → i: happily." } },
+        { t: "type", who: Z, q: "The dingo runs really ___! (fast)", a: "fast", tips: { "fastly": "fast → fast (no -ly!)." } },
+        { t: "type", who: Z, q: "Our boat is moving very ___ now. (careful)", a: "carefully", tips: { "carefuly": "careful + ly → carefully (two l)." } },
+        { t: "type", who: Z, q: "The emu can't fly, but it swims ___. (good)", a: "well", tips: { "goodly": "good → well." } }
+      ] },
+    { label: "Scene 4", title: "Big Bruce", shuffle: true,
+      memo: `📌 after <b>be / a / the</b> → adjective · after a verb (how?) → adverb`,
+      intro: `<div class="who"><div class="face">👩🏻‍💻</div><div><b class="n">Zoe</b>Look! There's something big in the water … It's Big Bruce, the biggest crocodile in Kakadu! Keep talking – but choose your words carefully!</div></div>`,
+      tasks: [
+        { t: "choice", who: Z, q: "Big Bruce is a ___ animal.", opts: ["dangerous", "dangerously"], keep: true, a: "dangerous", hint: "a … animal → adjective." },
+        { t: "choice", who: Z, q: "He is swimming ___ towards our boat.", opts: ["quiet", "quietly"], keep: true, a: "quietly", hint: "How is he swimming? → adverb." },
+        { t: "choice", who: Z, q: "His teeth are very ___.", opts: ["sharp", "sharply"], keep: true, a: "sharp", hint: "are … → adjective." },
+        { t: "choice", who: Z, q: "Our cameraman is breathing ___.", opts: ["nervous", "nervously"], keep: true, a: "nervously", hint: "How is he breathing? → adverb." },
+        { t: "choice", who: Z, q: "Stay ___, everybody!", opts: ["calm", "calmly"], keep: true, a: "calm", hint: "stay + adjective (like be): stay calm." },
+        { t: "choice", who: Z, q: "Big Bruce opens his mouth ___.", opts: ["slow", "slowly"], keep: true, a: "slowly", hint: "How does he open it? → adverb." }
+      ] },
+    { label: "Scene 5", title: "The subtitles", shuffle: true,
+      memo: `📌 adjective: what sb/sth is like · adverb: how sb does sth · good → well · fast → fast`,
+      intro: `<p>The subtitles for the show have some mistakes. Viewers are already writing angry comments! Correct them quickly.</p>`,
+      tasks: [
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["The", "crocodile", "moves", "very", "quick."], bad: 4, opts: ["quickly", "quick", "quicker"], fix: "quickly", hint: "How does it move? → adverb: quickly." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Our", "presenter", "speaks", "English", "very", "good."], bad: 5, opts: ["well", "good", "goodly"], fix: "well", hint: "good → well." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["This", "is", "a", "beautifully", "river."], bad: 3, opts: ["beautiful", "beautifully", "beauty"], fix: "beautiful", hint: "a … river → adjective: beautiful." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["The", "dingo", "runs", "fastly."], bad: 3, opts: ["fast", "fastly", "faster"], fix: "fast", hint: "fast → fast (no -ly)." }
+      ] },
+    { label: "Final", title: "Bruce attacks!", go: "🐊 Watch out!",
+      memo: `📌 adjective: Bruce is <b>angry</b>. · adverb: Bruce swims <b>angrily</b>. · good → <b>well</b>`,
+      intro: `<div class="who"><div class="face">👩🏻‍💻</div><div><b class="n">Zoe</b>He's coming! 🐊 This is the most exciting moment in the history of Croc Cam! Describe it – live!</div></div>`,
+      tasks: [
+        { t: "order", who: Z, task: "Say it live:", taskDe: "Bruce springt plötzlich aus dem Wasser!", words: ["Bruce", "jumps", "suddenly", "out", "of", "the", "water!"], a: ["Bruce jumps suddenly out of the water!", "Bruce suddenly jumps out of the water!"] },
+        { t: "order", who: Z, task: "Say it live:", taskDe: "Unser Kapitän steuert das Boot schnell weg.", words: ["Our", "captain", "steers", "the", "boat", "away", "quickly."], a: ["Our captain steers the boat away quickly.", "Our captain quickly steers the boat away."] },
+        { t: "choice", who: Z, q: "Phew! We are ___. Bruce only wanted our sandwiches! 🥪", opts: ["safe", "safely"], keep: true, a: "safe", hint: "are … → adjective: safe." },
+        { t: "type", who: Z, q: "You did that really ___! (good)", a: "well", tips: { "good": "How did you do it? → adverb: well." } }
+      ] }
+  ],
+  scene: (S) => SCENE(S, { start: "🛶", goal: S.done ? "🏆" : "🐊", label: "🔴 LIVE · Croc Cam · Kakadu", unit: "of the show", deco: [[24, 14, "🌿"], [45, 6, "🦜"], [62, 20, "🦘"]] }),
+  outro: `<div style="font-size:56px">🐊🎬</div><h1>That's a wrap!</h1><p style="font-size:19px">Zoe is happy: “Two million people watched our show – and you described everything perfectly!” Big Bruce swims away slowly with a sandwich in his mouth. 🥪</p>`
+});
+
+</script>
+</body>
+</html>

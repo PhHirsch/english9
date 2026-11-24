@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Outback Survival Camp · The Hirsch Games</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root{--bg:radial-gradient(ellipse at 50% 0%,#6a2a10 0%,#1a0a04 70%);--panel:#24120a;--txt:#fff3e6;--muted:#e4b89a;--line:#5e3420;--btn:#331a0e;--accent:#ff7a2a;--accentTxt:#2a0e00;--accent2:#ffc08a;--bubble:#36200f;--input:#170a05;--ok:#7ee08a;--bad:#ff8a7a}
+  .track{position:relative;height:150px;overflow:hidden;background:linear-gradient(#ff9a4a 0%,#ffcf7a 55%,#c8522a 55%,#8a3214 100%)}
+  .track .goal{position:absolute;right:14px;top:30px;font-size:54px}
+  .track .start{position:absolute;left:12px;bottom:10px;font-size:34px}
+  .track .path{position:absolute;left:40px;right:80px;bottom:34px;border-top:3px dashed rgba(255,255,255,.45)}
+  .track .me{position:absolute;bottom:22px;width:56px;height:56px;border-radius:50%;overflow:hidden;border:3px solid var(--accent);background:#fff;transition:left .8s;box-shadow:0 4px 14px #0007}
+  .track .me svg{width:100%;height:100%}
+  .track .deco{position:absolute;font-size:26px;opacity:.9}
+  .hud{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:14px;color:var(--accent2);background:rgba(0,0,0,.35);border-top:1px solid var(--line)}
+  .hud b{color:var(--accent)}
+  .card3{display:inline-block;vertical-align:top;background:var(--bubble);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:4px;min-width:170px;font-size:15px}
+  .card3 b{font-size:17px}
+
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script src="game.js?v=11"></script>
+<script src="juego.js?v=1"></script>
+<script>
+const SCENE = (S, o) => { const p = S.done ? 1 : S.solved / S.total;
+  return `<div class="track">${(o.deco||[]).map(d => `<span class="deco" style="left:${d[0]}%;top:${d[1]}px">${d[2]}</span>`).join("")}<span class="start">${o.start}</span><span class="goal">${o.goal}</span><div class="path"></div>
+    <div class="me" style="left:calc(40px + (100% - 180px) * ${p.toFixed(3)})">${E8.myAvatar()}</div></div>
+    <div class="hud"><span>${o.label}</span><span><b>${Math.round(p * 100)} %</b> ${o.unit || ""}</span></div>`; };
+const K = {face:"👩🏽‍🦰", name:"Ranger Kylie"}, D = {face:"🪵", name:"Camp diary"};
+JUEGO.start({
+  id: "modals", key: "e9-outback", icon: "🏕️", topic: "Modals & substitutes", title: "Outback Survival Camp",
+  intro: `<p>🏜️ Welcome to the <b>Outback Survival Camp</b> in the Northern Territory! For three days you will live in the bush with <b>Ranger Kylie</b>. At the end you can get the famous <b>Outback badge</b> 🏅.</p>
+    <p>But in the Outback there are rules: what you <b>can</b> do, what you <b>must</b> do – and what you <b>mustn't</b> do. If you don't know them, you won't survive the night … 🐍</p>
+    <p class="de">Im Outback gibt es Regeln. Lerne can/must/may und ihre Ersatzformen (be able to, have to, be allowed to) – dann bekommst du das Outback-Abzeichen.</p>`,
+  goLabel: "🏕️ To the camp!", time: "about 20 minutes",
+  rulesLabel: "The rules",
+  rules: `<h2>Modals and their substitutes</h2>
+    <table class="t"><tr><th></th><th>present</th><th>past</th><th>future</th></tr>
+    <tr><td><b>können</b></td><td>can / am, is, are able to</td><td>could / was, were able to</td><td>will be able to</td></tr>
+    <tr><td><b>müssen</b></td><td>must / have to, has to</td><td>had to</td><td>will have to</td></tr>
+    <tr><td><b>dürfen</b></td><td>may / am, is, are allowed to</td><td>was, were allowed to</td><td>will be allowed to</td></tr></table>
+    <div class="rule">⚠️ <b>mustn't</b> = nicht dürfen: <span class="ex">You mustn't feed the dingoes.</span><br>⚠️ <b>needn't / don't have to</b> = nicht müssen: <span class="ex">You needn't bring a tent.</span></div>
+    <div class="rule">After <b>will</b> you can't use can/must/may → <span class="ex">will <b>be able to</b> / will <b>have to</b> / will <b>be allowed to</b></span></div>`,
+  stages: [
+    { label: "Day 1", title: "The camp rules", go: "📋 Read the rules",
+      memo: `🪧 1. You <b>must</b> drink 4 litres of water a day. = You <b>have to</b> drink … · 2. You <b>may</b> swim in the waterhole. = You <b>are allowed to</b> swim … · 3. If you <b>can</b> light a fire … = If you <b>are able to</b> light a fire … · 4. You <b>mustn't</b> feed the dingoes! · 5. You <b>needn't</b> bring a tent. = You <b>don't have to</b> bring a tent.`,
+      intro: `<div class="who"><div class="face">👩🏽‍🦰</div><div><b class="n">Ranger Kylie</b>G'day! Look at the sign at the camp entrance. Some sentences say the same thing in two ways. Can you find out how?</div></div>
+        <div class="rule">🪧 <b>CAMP RULES</b><br>1. You <b>must</b> drink 4 litres of water a day. = You <b>have to</b> drink 4 litres of water a day.<br>2. You <b>may</b> swim in the waterhole. = You <b>are allowed to</b> swim in the waterhole.<br>3. If you <b>can</b> light a fire, you can help with dinner. = If you <b>are able to</b> light a fire …<br>4. You <b>mustn't</b> feed the dingoes!<br>5. You <b>needn't</b> bring a tent – we have tents. = You <b>don't have to</b> bring a tent.</div>
+        <p class="de">Vergleiche die Sätze auf dem Schild: Welche Wörter bedeuten dasselbe?</p>`,
+      pista: "Look at the camp rules: the sentences with “=” say the same thing.",
+      tasks: [
+        { t: "choice", who: K, q: "Which words mean the same as <b>must</b>?", keep: true, opts: ["have to", "be able to", "be allowed to"], a: "have to", hint: "Rule 1: must = have to (müssen)." },
+        { t: "choice", who: K, q: "Which words mean the same as <b>can</b>?", keep: true, opts: ["have to", "be able to", "be allowed to"], a: "be able to", hint: "Rule 3: can = be able to (können)." },
+        { t: "choice", who: K, q: "Which words mean the same as <b>may</b>?", keep: true, opts: ["have to", "be able to", "be allowed to"], a: "be allowed to", hint: "Rule 2: may = be allowed to (dürfen)." },
+        { t: "choice", q: "<b>You mustn't feed the dingoes.</b> – What does it mean?", keep: true, opts: ["Du darfst die Dingos nicht füttern.", "Du musst die Dingos nicht füttern."], a: "Du darfst die Dingos nicht füttern.", hint: "⚠️ mustn't = nicht dürfen! (Falscher Freund: nicht „nicht müssen“.)" },
+        { t: "choice", q: "<b>You needn't bring a tent.</b> – What does it mean?", keep: true, opts: ["Du musst kein Zelt mitbringen.", "Du darfst kein Zelt mitbringen."], a: "Du musst kein Zelt mitbringen.", hint: "needn't = nicht müssen – es ist nicht nötig." },
+        { t: "choice", who: K, q: "You don't have to cook tonight. = You ___ cook tonight.", opts: ["needn't", "mustn't", "can't"], a: "needn't", hint: "don't have to = needn't (nicht müssen)." }
+      ] },
+    { label: "Day 1", title: "Packing for the bush", shuffle: true,
+      memo: `📌 can / be able to = können · must / have to = müssen · may / be allowed to = dürfen · mustn't = nicht dürfen · needn't = nicht müssen`,
+      intro: `<div class="who"><div class="face">👩🏽‍🦰</div><div><b class="n">Ranger Kylie</b>Before we go into the bush, let's check what you know. Listen carefully!</div></div>`,
+      tasks: [
+        { t: "sort", who: K, task: "Sort the sentences.", taskDe: "Ordne die Sätze: können, müssen oder dürfen?", buckets: ["können", "müssen", "dürfen"],
+          items: [["Kylie is able to find water in the desert.", 0], ["We have to wear hats.", 1], ["You are allowed to use your phone in the evening.", 2], ["I can light a fire.", 0], ["Everybody must carry a first-aid kit.", 1], ["We may sleep outside tonight.", 2], ["Are you able to read a map?", 0], ["You have to tell Kylie when you leave the camp.", 1]],
+          why: {0: "be able to / can = können.", 1: "have to / must = müssen.", 2: "be allowed to / may = dürfen."} },
+        { t: "choice", who: K, q: "You ___ go into the bush alone. It's too dangerous! (nicht dürfen)", opts: ["mustn't", "needn't", "can"], a: "mustn't", hint: "nicht dürfen = mustn't.", why: {"needn't": "needn't = nicht müssen. Hier: nicht dürfen → mustn't."} },
+        { t: "choice", who: K, q: "You ___ wash the dishes – the next group does it. (nicht müssen)", opts: ["needn't", "mustn't", "can't"], a: "needn't", hint: "nicht müssen = needn't / don't have to.", why: {"mustn't": "mustn't = nicht dürfen. Hier: nicht müssen → needn't."} },
+        { t: "choice", q: "Are we ___ to swim in the waterhole? (dürfen)", opts: ["allowed", "able", "have"], a: "allowed", hint: "dürfen = be allowed to." },
+        { t: "choice", q: "Kylie ___ to speak three Aboriginal languages. (können)", opts: ["is able", "is allowed", "has"], a: "is able", hint: "können = be able to." }
+      ] },
+    { label: "Day 2", title: "Yesterday's group", shuffle: true,
+      memo: `📌 past: können → <b>could / was, were able to</b> · müssen → <b>had to</b> · dürfen → <b>was, were allowed to</b><br>nicht: <b>wasn't / weren't</b> able to · <b>wasn't / weren't</b> allowed to · <b>didn't have to</b>`,
+      intro: `<div class="who"><div class="face">🪵</div><div><b class="n">Camp diary</b>The group before you wrote about their day in the camp diary. But the rain has washed away some words!</div></div>
+        <p class="de">Ergänze die Vergangenheitsformen. must hat keine Vergangenheit → had to. may → was/were allowed to.</p>`,
+      pista: "Look at the memo: müssen → had to, dürfen → was/were allowed to, können → could / was/were able to.",
+      tasks: [
+        { t: "type", who: D, q: "Yesterday the group ___ walk 15 km. (müssen)", a: "had to", tips: { "musted": "must hat keine Vergangenheit → had to.", "have to": "Es ist Vergangenheit: had to." } },
+        { t: "type", who: D, q: "They ___ swim in the waterhole because of a crocodile. (nicht dürfen)", a: ["weren't allowed to", "were not allowed to"], tips: { "wasn't allowed to": "they → were: weren't allowed to." } },
+        { t: "type", who: D, q: "Luckily, Tom ___ find the way back with the map. (können)", a: ["was able to", "could"], tips: { "were able to": "Tom = he → was able to." } },
+        { t: "type", who: D, q: "The girls ___ sleep because of the noise. (nicht können)", a: ["weren't able to", "were not able to", "couldn't", "could not"] },
+        { t: "type", who: D, q: "We ___ use our phones after 9 pm. (nicht dürfen)", a: ["weren't allowed to", "were not allowed to"] },
+        { t: "type", who: D, q: "Mia ___ carry the heavy water bottles. (müssen)", a: "had to" }
+      ] },
+    { label: "Day 3", title: "Tomorrow's hike", shuffle: true,
+      memo: `📌 future: <b>will be able to</b> (können) · <b>will have to</b> (müssen) · <b>will be allowed to</b> (dürfen)<br>⚠️ never: will can / will must / will may`,
+      intro: `<div class="who"><div class="face">👩🏽‍🦰</div><div><b class="n">Ranger Kylie</b>Tomorrow is the big hike to the rock paintings. Let me tell you what will happen.</div></div>
+        <p class="de">Nach will darf kein can/must/may stehen – dann brauchst du die Ersatzformen.</p>`,
+      tasks: [
+        { t: "choice", who: K, q: "Tomorrow we ___ get up at 5 am. (müssen)", opts: ["will have to", "will must", "will can"], a: "will have to", hint: "Nach will kein must → will have to.", why: {"will must": "Nach will geht kein must – nimm have to!", "will can": "will can gibt es nicht – und hier heißt es müssen."} },
+        { t: "choice", who: K, q: "If we find water, we ___ stay in the desert longer. (können)", opts: ["will be able to", "will can", "will have to"], a: "will be able to", hint: "Nach will kein can → will be able to." },
+        { t: "type", who: K, q: "You ___ take photos of the rock paintings. (dürfen – future)", a: "will be allowed to", tips: { "will may": "Nach will kein may → will be allowed to." } },
+        { t: "type", who: K, q: "We ___ carry our own food. (müssen – future)", a: "will have to", tips: { "will must": "Nach will kein must → will have to." } }
+      ] },
+    { label: "Day 3", title: "Kylie's report", shuffle: true,
+      memo: `📌 present: can / have to / be allowed to · past: could, was able to / had to / was allowed to · future: will be able to / will have to / will be allowed to · mustn't = nicht dürfen · needn't = nicht müssen`,
+      intro: `<div class="who"><div class="face">👩🏽‍🦰</div><div><b class="n">Ranger Kylie</b>I'm writing a report for the park office, but I'm so tired … I've made some mistakes. Can you find them?</div></div>`,
+      tasks: [
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Tomorrow", "we", "will", "must", "walk", "20", "km."], bad: 3, opts: ["have to", "must", "can"], fix: "have to", hint: "Nach will kein must → will have to." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Yesterday", "we", "musted", "stay", "in", "the", "tent."], bad: 2, opts: ["had to", "must", "have to"], fix: "had to", hint: "must hat keine Vergangenheit → had to." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["You", "mustn't", "bring", "food", "–", "we", "have", "enough", "for", "everybody."], bad: 1, opts: ["needn't", "mustn't", "can't"], fix: "needn't", hint: "Es ist nicht nötig, Essen mitzubringen = nicht müssen → needn't." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Last", "year", "I", "can't", "climb", "the", "rock."], bad: 3, opts: ["couldn't", "can't", "mustn't"], fix: "couldn't", hint: "Last year = Vergangenheit → couldn't / wasn't able to." }
+      ] },
+    { label: "Final", title: "The night storm", go: "⛈️ Into the storm!",
+      memo: `📌 have to = müssen · mustn't = nicht dürfen · be able to = können · will be allowed to = dürfen (future)`,
+      intro: `<div class="who"><div class="face">👩🏽‍🦰</div><div><b class="n">Ranger Kylie</b>Oh no – a storm is coming! ⛈️ Quick, help me give the right instructions to the group!</div></div>`,
+      tasks: [
+        { t: "order", who: K, task: "Tell the group:", taskDe: "Wir müssen im Zelt bleiben.", words: ["We", "have", "to", "stay", "in", "the", "tent."], a: "We have to stay in the tent." },
+        { t: "order", who: K, task: "Warn the group:", taskDe: "Ihr dürft das Camp nicht verlassen.", words: ["You", "mustn't", "leave", "the", "camp."], a: "You mustn't leave the camp." },
+        { t: "order", who: {av: true, name: "You"}, task: "Ask Kylie:", taskDe: "Werden wir die Sterne sehen können?", words: ["Will", "we", "be", "able", "to", "see", "the", "stars?"], a: "Will we be able to see the stars?" },
+        { t: "choice", who: K, q: "The storm is over! You were great. You ___ wear the Outback badge from today. (dürfen – future)", opts: ["will be allowed to", "will may", "must"], a: "will be allowed to", hint: "dürfen + future → will be allowed to." }
+      ] }
+  ],
+  scene: (S) => SCENE(S, { start: "🏕️", goal: "🏅", label: "🏜️ Outback Survival Camp", unit: "to the badge", deco: [[30, 10, "🦘"], [55, 18, "🌵"], [72, 8, S.stage >= 5 ? "⛈️" : "☀️"]] }),
+  outro: `<div style="font-size:56px">🏅🦘</div><h1>You've got the Outback badge!</h1><p style="font-size:19px">The storm is over and the sky is full of stars. Kylie smiles: “You were able to follow every rule. You'll be allowed to come back next year – as a junior ranger!”</p>`
+});
+
+</script>
+</body>
+</html>

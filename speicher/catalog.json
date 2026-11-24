@@ -762,6 +762,76 @@
 {
 "id": "top-school",
 "slot": "top",
+"name": "SEK HX hoodie",
+"price": 150,
+"kind": "hoodie",
+"color": "#1d3a6e",
+"text": "SEK HX"
+},
+{
+"id": "top-abi-shirt",
+"slot": "top",
+"name": "Class of 2028 shirt",
+"price": 120,
+"kind": "abishirt",
+"color": "#1d1d22"
+},
+{
+"id": "top-abi-hoodie",
+"slot": "top",
+"name": "Class of 2028 hoodie",
+"price": 180,
+"kind": "abihoodie",
+"color": "#2a2b30"
+},
+{
+"id": "top-abi-gala",
+"slot": "top",
+"name": "Prom suit",
+"price": 300,
+"kind": "gala",
+"color": "#1d1d22",
+"lvl": 3
+},
+{
+"id": "top-abi-dress",
+"slot": "top",
+"name": "Prom dress",
+"price": 300,
+"kind": "dress",
+"color": "#1c2a6b",
+"lvl": 3
+},
+{
+"id": "top-abi-dress-gold",
+"slot": "top",
+"name": "Golden prom dress ✨",
+"price": 450,
+"kind": "dress",
+"color": "#d4a93a",
+"lvl": 5
+},
+{
+"id": "top-abi-toga",
+"slot": "top",
+"name": "Graduation gown",
+"price": 350,
+"kind": "toga",
+"color": "#20243a",
+"lvl": 4
+},
+{
+"id": "hat-birrete",
+"slot": "hat",
+"name": "Graduation cap",
+"price": 250,
+"kind": "birrete",
+"color": "#20243a",
+"lvl": 4
+},
+{
+"id": "top-school",
+"slot": "top",
 "name": "School hoodie",
 "price": 150,
 "kind": "hoodie",
@@ -1058,5 +1128,56 @@
 "price": 1200,
 "kind": "aurora",
 "lvl": 7
+},
+{
+"id": "hat-akubra",
+"slot": "hat",
+"name": "Akubra bush hat",
+"price": 250,
+"kind": "akubra",
+"color": "#8a6a42",
+"unit": 1
+},
+{
+"id": "hat-carnival",
+"slot": "hat",
+"name": "Carnival feathers",
+"price": 300,
+"kind": "feathers",
+"unit": 2
+},
+{
+"id": "top-carnival",
+"slot": "top",
+"name": "Carnival costume",
+"price": 400,
+"kind": "carnival",
+"color": "#8a1e8a",
+"unit": 2
+},
+{
+"id": "top-safari",
+"slot": "top",
+"name": "Safari vest",
+"price": 300,
+"kind": "safari",
+"color": "#7a7a4a",
+"unit": 3
+},
+{
+"id": "ex-bubbletea",
+"slot": "extra",
+"name": "Bubble tea",
+"price": 150,
+"kind": "bubbletea",
+"unit": 4
+},
+{
+"id": "ex-sneakers",
+"slot": "extra",
+"name": "Neon sneakers",
+"price": 300,
+"kind": "sneakers",
+"unit": 4
 }
 ]

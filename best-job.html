@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>The Best Job in the World · The Hirsch Games</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root{--bg:radial-gradient(ellipse at 50% 0%,#0a4a6a 0%,#03141e 70%);--panel:#071f2c;--txt:#eafaff;--muted:#9fd0e0;--line:#1a4a60;--btn:#0c2c3c;--accent:#2ad0c8;--accentTxt:#032a28;--accent2:#ffe08a;--bubble:#0e3446;--input:#04121a;--ok:#7ef0a0;--bad:#ff8a8a}
+  .track{position:relative;height:150px;overflow:hidden;background:linear-gradient(#7fd8ff 0%,#c8f2ff 50%,#2ab0d8 50%,#0a6a9a 100%)}
+  .track .goal{position:absolute;right:14px;top:30px;font-size:54px}
+  .track .start{position:absolute;left:12px;bottom:10px;font-size:34px}
+  .track .path{position:absolute;left:40px;right:80px;bottom:34px;border-top:3px dashed rgba(255,255,255,.45)}
+  .track .me{position:absolute;bottom:22px;width:56px;height:56px;border-radius:50%;overflow:hidden;border:3px solid var(--accent);background:#fff;transition:left .8s;box-shadow:0 4px 14px #0007}
+  .track .me svg{width:100%;height:100%}
+  .track .deco{position:absolute;font-size:26px;opacity:.9}
+  .hud{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:14px;color:var(--accent2);background:rgba(0,0,0,.35);border-top:1px solid var(--line)}
+  .hud b{color:var(--accent)}
+  .card3{display:inline-block;vertical-align:top;background:var(--bubble);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:4px;min-width:170px;font-size:15px}
+  .card3 b{font-size:17px}
+
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script src="game.js?v=11"></script>
+<script src="juego.js?v=1"></script>
+<script>
+const SCENE = (S, o) => { const p = S.done ? 1 : S.solved / S.total;
+  return `<div class="track">${(o.deco||[]).map(d => `<span class="deco" style="left:${d[0]}%;top:${d[1]}px">${d[2]}</span>`).join("")}<span class="start">${o.start}</span><span class="goal">${o.goal}</span><div class="path"></div>
+    <div class="me" style="left:calc(40px + (100% - 180px) * ${p.toFixed(3)})">${E8.myAvatar()}</div></div>
+    <div class="hud"><span>${o.label}</span><span><b>${Math.round(p * 100)} %</b> ${o.unit || ""}</span></div>`; };
+const J = {face:"👨🏾‍💼", name:"Mr Harris (jury)"};
+const CANDS = `<div><div class="card3">🇬🇧 <b>Ella</b>, 24<br>🏊 swims 2 km<br>🗣️ 3 languages<br>📱 2,000 followers<br>📷 good photos</div><div class="card3">🇬🇭 <b>Kofi</b>, 29<br>🏊 swims 5 km<br>🗣️ 4 languages<br>📱 10,000 followers<br>📷 very good photos</div><div class="card3">🇩🇪 <b>Lena</b>, 22<br>🏊 swims 2 km<br>🗣️ 2 languages<br>📱 50,000 followers<br>📷 OK photos</div></div>`;
+JUEGO.start({
+  id: "comparison", key: "e9-bestjob", icon: "🏝️", topic: "Comparison", title: "The Best Job in the World",
+  intro: `<p>🏝️ An island on the Great Barrier Reef needs a new <b>island caretaker</b>. The job: swim, dive, look after the reef, take photos and write a blog. People call it <b>“the best job in the world”</b>!</p>
+    <p>Thousands of people from all over the world have applied. Now there are three finalists – and <b>you</b> are on the jury with Mr Harris. Compare the candidates and find the best one!</p>
+    <p class="de">Du bist in der Jury. Vergleiche die drei Bewerber mit Steigerungsformen (older, the best, as … as) und finde den besten.</p>`,
+  goLabel: "🏝️ Meet the finalists!", time: "about 20 minutes",
+  rulesLabel: "The rules",
+  rules: `<h2>Comparison</h2>
+    <div class="rule"><b>Short adjectives:</b> old – old<b>er</b> – the old<b>est</b> · big – bi<b>gg</b>er – the bi<b>gg</b>est · happy – happ<b>ier</b> – the happ<b>iest</b></div>
+    <div class="rule"><b>Long adjectives:</b> famous – <b>more</b> famous – <b>the most</b> famous · interesting – more interesting – the most interesting</div>
+    <div class="rule"><b>Irregular:</b> good – better – the best · bad – worse – the worst · many/much – more – the most · far – further – the furthest</div>
+    <div class="rule"><b>than</b> = als: <span class="ex">Kofi is older than Ella.</span><br><b>as … as</b> = genauso … wie: <span class="ex">Ella swims as far as Lena.</span> · <b>not as … as</b> = nicht so … wie</div>`,
+  stages: [
+    { label: "Round 1", title: "The finalists", go: "🔍 Compare them!",
+      memo: `${CANDS}Kofi is <b>older than</b> Ella. · Lena is <b>the youngest</b>. · Kofi's photos are <b>better than</b> Lena's. · Lena is <b>more famous than</b> Ella. · Ella swims <b>as far as</b> Lena.`,
+      intro: `<div class="who"><div class="face">👨🏾‍💼</div><div><b class="n">Mr Harris</b>Here are our three finalists. Look at the cards. Then help me compare them.</div></div>${CANDS}
+        <div class="rule">Kofi is <b>older than</b> Ella. · Lena is <b>the youngest</b>. · Kofi's photos are <b>better than</b> Lena's. · Lena is <b>more famous than</b> Ella. · Ella swims <b>as far as</b> Lena.</div>
+        <p class="de">Schau dir die Beispielsätze an: Wann -er/-est, wann more/most? Was heißt than, was as … as?</p>`,
+      pista: "Look at the cards in the memo and at the examples.",
+      tasks: [
+        { t: "choice", who: J, q: "Kofi is ___ than Ella.", opts: ["older", "oldest", "more old"], a: "older", hint: "Kofi is 29, Ella is 24 → older than." },
+        { t: "choice", who: J, q: "Lena is ___ candidate.", opts: ["the youngest", "the younger", "the most young"], a: "the youngest", hint: "Lena is 22 – the youngest of the three." },
+        { t: "choice", who: J, q: "Ella swims ___ far as Lena.", opts: ["as", "than", "so"], a: "as", hint: "Both swim 2 km → as far as (genauso weit wie)." },
+        { t: "choice", who: J, q: "Kofi speaks ___ languages than Lena.", opts: ["more", "most", "much"], a: "more", hint: "4 > 2 → more … than." },
+        { t: "choice", q: "Which form is correct?", keep: true, opts: ["more famous", "famouser"], a: "more famous", hint: "famous is a long adjective → more famous." },
+        { t: "choice", who: J, q: "Lena has ___ followers of all.", opts: ["the most", "more", "the much"], a: "the most", hint: "50,000 is the highest number → the most." }
+      ] },
+    { label: "Round 2", title: "The interviews", shuffle: true,
+      memo: `📌 -er/-est: quiet – quieter · hot – ho<b>tt</b>er · funny – funn<b>ie</b>st · more/most: more interesting, the most exciting · good – better – the best · bad – worse – the worst`,
+      intro: `<div class="who"><div class="face">👨🏾‍💼</div><div><b class="n">Mr Harris</b>Now write down the jury's notes from the interviews. Careful with the spelling!</div></div>`,
+      pista: "Short word → -er/-est. Long word → more/most. good/bad are irregular.",
+      tasks: [
+        { t: "type", who: J, q: "Kofi's photos are ___ than Ella's. (good)", a: "better", tips: { "gooder": "good is irregular: good – better – the best.", "more good": "good is irregular: better." } },
+        { t: "type", who: J, q: "Lena's video was the ___ of all. (funny)", a: "funniest", tips: { "funnyest": "y → i: funniest.", "most funny": "funny → the funniest." } },
+        { t: "type", who: J, q: "The interview with Kofi was ___ than the interview with Lena. (interesting)", a: "more interesting", tips: { "interestinger": "Long adjective → more interesting." } },
+        { t: "type", who: J, q: "Lena's diving test was ___ than Kofi's. (bad)", a: "worse", tips: { "badder": "bad is irregular: bad – worse – the worst.", "worser": "Just: worse." } },
+        { t: "type", who: J, q: "For Kofi this is the ___ job in the world. (exciting)", a: "most exciting", tips: { "excitingest": "Long adjective → the most exciting." } },
+        { t: "type", who: J, q: "The island is much ___ than Sydney. (quiet)", a: "quieter" },
+        { t: "type", who: J, q: "In summer the island is ___ than Germany. (hot)", a: "hotter", tips: { "hoter": "Short vowel + one consonant → double: hotter." } }
+      ] },
+    { label: "Round 3", title: "The jury's word list", shuffle: true,
+      memo: `📌 short (1 syllable, or 2 with -y) → -er/-est · long → more/most · irregular: good, bad, far, many`,
+      intro: `<p>Mr Harris is making a word list for the final report. Which adjectives get -er/-est, which get more/most – and which are irregular?</p>`,
+      tasks: [
+        { t: "sort", who: J, task: "Sort the adjectives.", taskDe: "Ordne die Adjektive.", buckets: ["-er / -est", "more / most", "irregular"],
+          items: [["big", 0], ["beautiful", 1], ["good", 2], ["cheap", 0], ["famous", 1], ["bad", 2], ["easy", 0], ["interesting", 1], ["far", 2], ["happy", 0]],
+          why: {0: "Short word (or 2 syllables with -y) → -er/-est.", 1: "Long word → more/most.", 2: "Irregular: good – better, bad – worse, far – further."} }
+      ] },
+    { label: "Round 4", title: "Mistakes in the report", shuffle: true,
+      memo: `📌 than = als · as … as = genauso … wie · stronger (not more strong) · the best (not the most good)`,
+      intro: `<div class="who"><div class="face">👨🏾‍💼</div><div><b class="n">Mr Harris</b>My assistant wrote this report. There are some mistakes in it. Please correct them before it goes online.</div></div>`,
+      tasks: [
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Kofi", "is", "more strong", "than", "Ella."], bad: 2, opts: ["stronger", "strongest", "more strong"], fix: "stronger", hint: "strong is short → stronger." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Ella", "swims", "as", "far", "than", "Lena."], bad: 4, opts: ["as", "than", "then"], fix: "as", hint: "as … as (genauso … wie)." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Kofi", "is", "the most good", "swimmer."], bad: 2, opts: ["the best", "the better", "the goodest"], fix: "the best", hint: "good – better – the best." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Lena's", "videos", "are", "more", "popular", "then", "Ella's."], bad: 5, opts: ["than", "then", "as"], fix: "than", hint: "als = than (then = dann)." }
+      ] },
+    { label: "Final", title: "And the winner is …", go: "🏆 The final decision!",
+      memo: `${CANDS}📌 The job needs: <b>the best swimmer</b> and a person who speaks <b>the most languages</b>.`,
+      intro: `<div class="who"><div class="face">👨🏾‍💼</div><div><b class="n">Mr Harris</b>Remember: the caretaker must swim every day around the reef and talk to tourists from all over the world. So we need the best swimmer – and the person who speaks the most languages.</div></div>`,
+      tasks: [
+        { t: "order", who: J, task: "Write the jury's sentence:", taskDe: "Kofi ist der beste Schwimmer von allen.", words: ["Kofi", "is", "the", "best", "swimmer", "of", "all."], a: "Kofi is the best swimmer of all." },
+        { t: "order", who: J, task: "Write the jury's sentence:", taskDe: "Lenas Videos sind lustiger als Kofis.", words: ["Lena's", "videos", "are", "funnier", "than", "Kofi's."], a: "Lena's videos are funnier than Kofi's." },
+        { t: "order", who: J, task: "Write the jury's sentence:", taskDe: "Kofi ist nicht so berühmt wie Lena.", words: ["Kofi", "isn't", "as", "famous", "as", "Lena."], a: "Kofi isn't as famous as Lena." },
+        { t: "choice", who: J, q: "So … the best caretaker for the reef is ___!", opts: ["Kofi", "Lena", "Ella"], a: "Kofi", hint: "Kofi swims the furthest (5 km) and speaks the most languages (4)." }
+      ] }
+  ],
+  scene: (S) => SCENE(S, { start: "📋", goal: "🏝️", label: "🏆 The Best Job in the World", unit: "decision", deco: [[28, 12, "🐠"], [50, 6, "☀️"], [66, 16, "🐢"]] }),
+  outro: `<div style="font-size:56px">🏝️🎉</div><h1>Kofi gets the best job in the world!</h1><p style="font-size:19px">Kofi can't believe it: “This is the happiest day of my life!” And Lena? She gets a job too – she will make the funniest videos about the island. Thank you, jury member!</p>`
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Fake or Real? · The Hirsch Games</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root{--bg:radial-gradient(ellipse at 50% 0%,#4a1a6a 0%,#10061a 70%);--panel:#1a0c28;--txt:#fbf0ff;--muted:#cfa8e8;--line:#43245e;--btn:#25123a;--accent:#ff4fb0;--accentTxt:#fff;--accent2:#7fe0ff;--bubble:#2c163e;--input:#0e0616;--ok:#7ef0b0;--bad:#ffb03a}
+  .track{position:relative;height:150px;overflow:hidden;background:linear-gradient(135deg,#ff6fb0 0%,#a06aff 50%,#3ab0ff 100%)}
+  .track .goal{position:absolute;right:14px;top:30px;font-size:54px}
+  .track .start{position:absolute;left:12px;bottom:10px;font-size:34px}
+  .track .path{position:absolute;left:40px;right:80px;bottom:34px;border-top:3px dashed rgba(255,255,255,.45)}
+  .track .me{position:absolute;bottom:22px;width:56px;height:56px;border-radius:50%;overflow:hidden;border:3px solid var(--accent);background:#fff;transition:left .8s;box-shadow:0 4px 14px #0007}
+  .track .me svg{width:100%;height:100%}
+  .track .deco{position:absolute;font-size:26px;opacity:.9}
+  .hud{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:14px;color:var(--accent2);background:rgba(0,0,0,.35);border-top:1px solid var(--line)}
+  .hud b{color:var(--accent)}
+  .card3{display:inline-block;vertical-align:top;background:var(--bubble);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:4px;min-width:170px;font-size:15px}
+  .card3 b{font-size:17px}
+
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script src="game.js?v=11"></script>
+<script src="juego.js?v=1"></script>
+<script>
+const SCENE = (S, o) => { const p = S.done ? 1 : S.solved / S.total;
+  return `<div class="track">${(o.deco||[]).map(d => `<span class="deco" style="left:${d[0]}%;top:${d[1]}px">${d[2]}</span>`).join("")}<span class="start">${o.start}</span><span class="goal">${o.goal}</span><div class="path"></div>
+    <div class="me" style="left:calc(40px + (100% - 180px) * ${p.toFixed(3)})">${E8.myAvatar()}</div></div>
+    <div class="hud"><span>${o.label}</span><span><b>${Math.round(p * 100)} %</b> ${o.unit || ""}</span></div>`; };
+const M = {face:"🧑🏻‍💻", name:"Max (TruthCheck)"}, SU = {face:"🤳🏼", name:"Sunny Skye"};
+JUEGO.start({
+  id: "sp-pp", key: "e9-fakeorreal", icon: "🤳", topic: "Simple past & present perfect", title: "Fake or Real?",
+  intro: `<p>📱 <b>Sunny Skye</b> is a travel influencer with two million followers. She says: <i>“I've been to every island in the Caribbean!”</i> Her photos are amazing: beaches, volcanoes, carnival …</p>
+    <p>But are they real? You work for <b>TruthCheck</b>, a website that checks facts. Your boss <b>Max</b> wants to know the truth. Read Sunny's posts and check every word!</p>
+    <p class="de">Du prüfst die Posts einer Influencerin. Simple past (wann genau?) oder present perfect (bis jetzt, ohne Zeitpunkt)?</p>`,
+  goLabel: "🔍 Start the fact check!", time: "about 20 minutes",
+  rulesLabel: "The rules",
+  rules: `<h2>Simple past or present perfect?</h2>
+    <div class="rule"><b>Simple past</b> – finished, with a time in the past:<br><span class="ex">I <b>visited</b> Jamaica <b>last week</b>.</span><br>Signal words: yesterday, last week/year, … ago, in 2025, when I was ten, What time / When …?</div>
+    <div class="rule"><b>Present perfect</b> – no exact time, important now / up to now: <b>have / has + past participle</b><br><span class="ex">I <b>have been</b> to every island.</span> · <span class="ex">Have you <b>ever</b> seen a volcano?</span><br>Signal words: ever, never, already, just, yet, so far, since, for</div>
+    <div class="rule">Irregular: go – went – <b>gone</b> · be – was/were – <b>been</b> · see – saw – <b>seen</b> · swim – swam – <b>swum</b> · eat – ate – <b>eaten</b> · take – took – <b>taken</b> · fly – flew – <b>flown</b></div>`,
+  stages: [
+    { label: "Check 1", title: "Sunny's profile", go: "🔍 Look at the profile",
+      memo: `🤳 “I <b>have been</b> to 30 islands so far! 🌴” · “I <b>flew</b> to Barbados <b>last Monday</b>.” · “<b>Have</b> you <b>ever</b> <b>swum</b> with turtles?” · “<b>Two days ago</b> I <b>climbed</b> a volcano.” · “I <b>have just eaten</b> the best seafood in the world.”`,
+      intro: `<div class="who"><div class="face">🧑🏻‍💻</div><div><b class="n">Max</b>Look at Sunny's profile. Some sentences have a time in the past, some don't. Can you see the difference?</div></div>
+        <div class="rule">🤳 <b>@SunnySkye</b><br>“I <b>have been</b> to 30 islands so far! 🌴” · “I <b>flew</b> to Barbados <b>last Monday</b>.” · “<b>Have</b> you <b>ever</b> <b>swum</b> with turtles? I have!” · “<b>Two days ago</b> I <b>climbed</b> a volcano.” · “I <b>have</b> <b>just</b> <b>eaten</b> the best seafood in the world.”</div>
+        <p class="de">Welche Sätze nennen einen genauen Zeitpunkt in der Vergangenheit? Welche Zeitform steht dann?</p>`,
+      pista: "Look for a time in the past (last Monday, two days ago …) → simple past.",
+      tasks: [
+        { t: "sort", who: M, task: "Sort the signal words.", taskDe: "Ordne die Signalwörter.", buckets: ["simple past", "present perfect"],
+          items: [["yesterday", 0], ["last summer", 0], ["two days ago", 0], ["in 2025", 0], ["ever", 1], ["never", 1], ["already", 1], ["just", 1], ["yet", 1], ["so far", 1]],
+          why: {0: "A finished time in the past → simple past.", 1: "No exact time / up to now → present perfect."} },
+        { t: "choice", q: "“I flew to Barbados last Monday.” – Why simple past?", keep: true, opts: ["There is a time in the past (last Monday).", "It is important now."], a: "There is a time in the past (last Monday).", hint: "last Monday = genauer Zeitpunkt in der Vergangenheit → simple past." },
+        { t: "choice", q: "How do you make the present perfect?", keep: true, opts: ["have / has + past participle", "was / were + -ing", "did + verb"], a: "have / has + past participle", hint: "I have been · she has seen …" }
+      ] },
+    { label: "Check 2", title: "Sunny's posts", shuffle: true,
+      memo: `📌 time in the past → <b>simple past</b> · ever / never / already / just / yet / so far → <b>have / has + 3rd form</b>`,
+      intro: `<div class="who"><div class="face">🧑🏻‍💻</div><div><b class="n">Max</b>Sunny's posts are full of typos. We need the correct versions in our article.</div></div>`,
+      tasks: [
+        { t: "choice", who: SU, q: "I ___ Jamaica last week. 🇯🇲", opts: ["visited", "have visited"], keep: true, a: "visited", hint: "last week → simple past." },
+        { t: "choice", who: SU, q: "I ___ such a beautiful beach! 😍", opts: ["have never seen", "never saw"], keep: true, a: "have never seen", hint: "never (up to now) → present perfect." },
+        { t: "choice", who: SU, q: "___ you ever ___ to Trinidad?", opts: ["Have … been", "Did … be"], keep: true, a: "Have … been", hint: "ever → present perfect: Have you ever been …?" },
+        { t: "choice", who: SU, q: "Three days ago I ___ the carnival in Port of Spain.", opts: ["saw", "have seen"], keep: true, a: "saw", hint: "three days ago → simple past." },
+        { t: "choice", who: SU, q: "We ___ already ___ 500 photos today!", opts: ["have … taken", "did … take"], keep: true, a: "have … taken", hint: "already → present perfect." },
+        { t: "choice", who: M, q: "When ___ Sunny ___ to Barbados?", opts: ["did … fly", "has … flown"], keep: true, a: "did … fly", hint: "When …? asks for a time → simple past." }
+      ] },
+    { label: "Check 3", title: "The irregular verbs", shuffle: true,
+      memo: `📌 swim – swam – <b>swum</b> · eat – ate – <b>eaten</b> · fly – <b>flew</b> – flown · take – took – <b>taken</b> · go – <b>went</b> – gone · be – was – <b>been</b> · see – saw – <b>seen</b>`,
+      intro: `<div class="who"><div class="face">🧑🏻‍💻</div><div><b class="n">Max</b>Now write the verbs correctly. Careful: irregular verbs!</div></div>`,
+      pista: "Present perfect → 3rd form (swum, eaten, taken …). Simple past → 2nd form (flew, went …).",
+      tasks: [
+        { t: "type", who: SU, q: "I have ___ with dolphins! 🐬 (swim)", a: "swum", tips: { "swam": "After have → 3rd form: swum.", "swimmed": "swim is irregular: swim – swam – swum." } },
+        { t: "type", who: SU, q: "Have you ever ___ flying fish? (eat)", a: "eaten", tips: { "ate": "After have → 3rd form: eaten." } },
+        { t: "type", who: SU, q: "I ___ to Barbados yesterday. (fly)", a: "flew", tips: { "flied": "fly is irregular: fly – flew – flown.", "have flown": "yesterday → simple past: flew." } },
+        { t: "type", who: SU, q: "We have just ___ a selfie with a pirate ship. (take)", a: "taken", tips: { "took": "After have → 3rd form: taken." } },
+        { t: "type", who: SU, q: "Two days ago I ___ diving. (go)", a: "went", tips: { "gone": "two days ago → simple past: went." } },
+        { t: "type", who: M, q: "Sunny ___ to 30 islands so far – she says. (be)", a: ["has been", "'s been"], tips: { "have been": "Sunny = she → has been.", "was": "so far → present perfect: has been." } }
+      ] },
+    { label: "Check 4", title: "The interview", shuffle: true,
+      memo: `📌 Have you ever …? · Has she ever …? · When did you …? · What time did you …?`,
+      intro: `<div class="who"><div class="face">🧑🏻‍💻</div><div><b class="n">Max</b>We've got a video call with Sunny! Prepare our questions.</div></div>`,
+      tasks: [
+        { t: "order", who: M, task: "Ask Sunny:", taskDe: "Bist du jemals in Trinidad gewesen?", words: ["Have", "you", "ever", "been", "to", "Trinidad?"], a: "Have you ever been to Trinidad?" },
+        { t: "order", who: M, task: "Ask Sunny:", taskDe: "Wann bist du auf Barbados angekommen?", words: ["When", "did", "you", "arrive", "in", "Barbados?"], a: "When did you arrive in Barbados?" },
+        { t: "order", who: M, task: "Ask Sunny:", taskDe: "Hast du den Vulkan schon fotografiert?", words: ["Have", "you", "photographed", "the", "volcano", "yet?"], a: "Have you photographed the volcano yet?" }
+      ] },
+    { label: "Check 5", title: "Sunny's answers", shuffle: true,
+      memo: `📌 simple past: yesterday, … ago, last … · present perfect: ever, never, already, just, yet, so far`,
+      intro: `<p>Sunny answers Max's questions in a chat – but her grammar is as strange as her photos …</p>`,
+      tasks: [
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["I", "have", "arrived", "in", "Barbados", "last", "Monday."], bad: 1, opts: ["–", "have", "had"], fix: "–", show: "I arrived in Barbados last Monday.", hint: "last Monday → simple past: I arrived (without have)." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["I", "have", "never", "saw", "a", "volcano", "before."], bad: 3, opts: ["seen", "saw", "see"], fix: "seen", hint: "have never + 3rd form → seen." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Yesterday", "I", "have", "swum", "in", "the", "sea."], bad: 2, opts: ["–", "have", "has"], fix: "–", show: "Yesterday I swam in the sea.", hint: "yesterday → simple past: I swam." },
+        { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Has", "you", "ever", "been", "to", "Jamaica?"], bad: 0, opts: ["Have", "Has", "Did"], fix: "Have", hint: "you → Have you ever …?" }
+      ] },
+    { label: "Final", title: "The truth", go: "🕵️ Find the truth!",
+      memo: `📸 Photo data: <b>Beach photo</b> – taken in a studio in Berlin, 10 March · <b>Volcano photo</b> – downloaded from the internet in 2024 · <b>Sunny's flights</b> – no flights since January`,
+      intro: `<div class="who"><div class="face">🧑🏻‍💻</div><div><b class="n">Max</b>Our tech team has checked the photo data. Look at the memo … I think we know the truth now!</div></div>`,
+      tasks: [
+        { t: "choice", who: M, q: "Sunny ___ (take) the beach photo in a studio in Berlin on 10 March.", opts: ["took", "has taken"], keep: true, a: "took", hint: "on 10 March = a time in the past → simple past." },
+        { t: "choice", who: M, q: "Sunny ___ (not fly) anywhere since January.", opts: ["hasn't flown", "didn't fly"], keep: true, a: "hasn't flown", hint: "since January (up to now) → present perfect." },
+        { t: "type", who: M, q: "She ___ the volcano photo from the internet in 2024. (download)", a: "downloaded", tips: { "has downloaded": "in 2024 → simple past: downloaded." } },
+        { t: "choice", who: M, q: "So, Sunny Skye's photos are …", opts: ["FAKE! 🚫", "REAL ✅"], keep: true, a: "FAKE! 🚫", hint: "Studio in Berlin, a photo from the internet, no flights → fake!" }
+      ] }
+  ],
+  scene: (S) => SCENE(S, { start: "📱", goal: S.done ? "🚫" : "❓", label: "🔍 TruthCheck · Fact check: @SunnySkye", unit: "checked", deco: [[26, 12, "🌴"], [44, 4, "📸"], [62, 16, "🌋"]] }),
+  outro: `<div style="font-size:56px">🚫📸</div><h1>Fake!</h1><p style="font-size:19px">TruthCheck publishes your article: <i>“Sunny Skye has never been to the Caribbean!”</i> One day later Sunny posts a video: “I'm sorry. I made a mistake.” And Max? He has just offered you a job. 😉</p>`
+});
+
+</script>
+</body>
+</html>

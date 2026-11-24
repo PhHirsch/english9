@@ -94,6 +94,7 @@
     if (!API_URL || API_URL.indexOf("/*") === 0) { box.style.display = "none"; return; }
     const se = getSession();
     const prevLevel = se && se.state ? se.state.level : 0;
+    const prevStreakToday = se && se.state ? !!se.state.streakToday : true;
     const show = r => {
       if (r.queued) { box.innerHTML = "📡 No internet right now. Your result is saved on this device and will be sent automatically next time you are online and logged in.<div style='font-size:14px;opacity:.75'>Kein Internet: Dein Ergebnis ist gespeichert und wird später automatisch gesendet.</div>"; return; }
       let t = `<div style="font-size:24px;font-weight:700">+${r.earned} 🪙</div>`;
@@ -102,6 +103,8 @@
       if (r.improved) t += `<div style="font-size:14px;opacity:.75">New best! – Neuer Rekord!</div>`;
       if (r.review && !r.earned) t += `<div style="font-size:14px;opacity:.75">Mistake-box coins only once a day. – Münzen für die Fehler-Kiste gibt es nur 1x pro Tag.</div>`;
       if (r.daily && !r.earned) t += `<div style="font-size:14px;opacity:.75">Daily coins only once a day. – Tagesmünzen gibt es nur 1x pro Tag.</div>`;
+      if (r.perfectNew) t += `<div style="font-size:22px;font-weight:800;margin-top:6px">👑 FLAWLESS! Not a single mistake. – Ohne einen einzigen Fehler!</div>`;
+      if ("streak" in r.state && !prevStreakToday && r.state.streak > 0) t += `<div style="font-size:20px;font-weight:800;margin-top:6px;color:#ff9a2a">🔥 ${r.state.streak}-day streak!</div><div style="font-size:14px;opacity:.75">Come back tomorrow so you don't lose it. – Spiel morgen wieder, sonst ist die Serie weg.</div>`;
       if (prevLevel && r.state.level > prevLevel) t += `<div style="font-size:22px;font-weight:800;margin-top:6px">🎉 LEVEL UP! Level ${r.state.level}</div>`;
       box.innerHTML = t;
     };
