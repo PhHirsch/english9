@@ -1156,6 +1156,24 @@
 "unit": 2
 },
 {
+"id": "hat-cracker",
+"slot": "hat",
+"name": "Cracker paper crown 🎉",
+"price": 50,
+"kind": "papercrown",
+"color": "#ffd23a",
+"adv": 10
+},
+{
+"id": "top-elf",
+"slot": "top",
+"name": "Elf costume 🧝",
+"price": 80,
+"kind": "elf",
+"color": "#2a8a3a",
+"adv": 20
+},
+{
 "id": "top-safari",
 "slot": "top",
 "name": "Safari vest",

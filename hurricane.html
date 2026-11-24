@@ -23,8 +23,8 @@
 </head>
 <body>
 <main id="app"></main>
-<script src="game.js?v=11"></script>
-<script src="juego.js?v=1"></script>
+<script src="game.js?v=12"></script>
+<script src="juego.js?v=7"></script>
 <script>
 const SCENE = (S, o) => { const p = S.done ? 1 : S.solved / S.total;
   return `<div class="track">${(o.deco||[]).map(d => `<span class="deco" style="left:${d[0]}%;top:${d[1]}px">${d[2]}</span>`).join("")}<span class="start">${o.start}</span><span class="goal">${o.goal}</span><div class="path"></div>
@@ -56,6 +56,9 @@ JUEGO.start({
         { t: "choice", q: "Where do you need a comma?", keep: true, opts: ["If the airport closes, tourists will stay.", "Tourists will stay, if the airport closes."], a: "If the airport closes, tourists will stay.", hint: "Comma only when the if-part comes first." }
       ] },
     { label: "Hour 2", title: "Callers on the line", shuffle: true,
+      pick: { q: "Two calls are waiting. Which one do you take first?", qDe: "Zwei Anrufe warten. Welchen nimmst du zuerst?", opts: [
+        { t: "🏨 A hotel manager", intro: `<p>🏨 A hotel manager is on the line. 200 tourists are in her hotel!</p>`, first: [0, 1] },
+        { t: "🎣 A fisherman", intro: `<p>🎣 A fisherman is on the line. His boat is still in the harbour!</p>`, first: [2, 3] }] },
       memo: `📌 If + simple present (he/she/it <b>-s</b>!) … will + verb`,
       intro: `<div class="who"><div class="face">🧔🏿‍♂️</div><div><b class="n">Marlon</b>The phones are ringing! Help me answer our listeners.</div></div>`,
       tasks: [

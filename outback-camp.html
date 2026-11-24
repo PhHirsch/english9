@@ -23,8 +23,8 @@
 </head>
 <body>
 <main id="app"></main>
-<script src="game.js?v=11"></script>
-<script src="juego.js?v=1"></script>
+<script src="game.js?v=12"></script>
+<script src="juego.js?v=7"></script>
 <script>
 const SCENE = (S, o) => { const p = S.done ? 1 : S.solved / S.total;
   return `<div class="track">${(o.deco||[]).map(d => `<span class="deco" style="left:${d[0]}%;top:${d[1]}px">${d[2]}</span>`).join("")}<span class="start">${o.start}</span><span class="goal">${o.goal}</span><div class="path"></div>
@@ -86,6 +86,9 @@ JUEGO.start({
         { t: "type", who: D, q: "Mia ___ carry the heavy water bottles. (müssen)", a: "had to" }
       ] },
     { label: "Day 3", title: "Tomorrow's hike", shuffle: true,
+      pick: { q: "Kylie asks: Which way do we take to the waterhole tomorrow?", qDe: "Welchen Weg nehmen wir morgen zum Wasserloch?", opts: [
+        { t: "🪨 Over the rocks – with a great view", intro: `<p>🪨 You choose the way over the red rocks. The view will be amazing – but it's a hard climb! Kylie explains the plan for tomorrow …</p>`, first: [0] },
+        { t: "🏞️ Along the dry riverbed – flat and shady", intro: `<p>🏞️ You choose the dry riverbed. It's flat and there are trees – but maybe there are snakes! Kylie explains the plan for tomorrow …</p>`, first: [1] }] },
       memo: `📌 future: <b>will be able to</b> (können) · <b>will have to</b> (müssen) · <b>will be allowed to</b> (dürfen)<br>⚠️ never: will can / will must / will may`,
       intro: `<div class="who"><div class="face">👩🏽‍🦰</div><div><b class="n">Ranger Kylie</b>Tomorrow is the big hike to the rock paintings. Let me tell you what will happen.</div></div>
         <p class="de">Nach will darf kein can/must/may stehen – dann brauchst du die Ersatzformen.</p>`,

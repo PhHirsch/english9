@@ -142,3 +142,5 @@ YARD_STAGE = {"yard1": 1, "yard2": 2, "yard3": 4, "yard4": 5}
 if __name__ == "__main__":
     ids = [h["id"] for h in H]; assert len(ids) == len(set(ids))
     print(len(H), "Hausteile")
+# Adventskalender
+add("y-bigsnowman", "yard", "Giant snowman with lights", 100, kind="bigsnowman", adv=24)

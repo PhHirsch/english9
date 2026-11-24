@@ -72,8 +72,8 @@
 <body>
 <div class="wrap" id="app"></div>
 <div class="ov" id="ov"><div class="box" id="ovbox"></div></div>
-<script src="game.js?v=11"></script>
-<script src="house.js?v=13"></script>
+<script src="game.js?v=12"></script>
+<script src="house.js?v=14"></script>
 <script>
 const $ = id => document.getElementById(id);
 const H = window.HOUSE;
@@ -95,6 +95,7 @@ function lockReason(it) {
   if (it.months && !E8.inSeason(it)) return "🗓 " + (it.months.length === 1 ? MON[it.months[0]] : MON[it.months[0]] + "–" + MON[it.months[it.months.length - 1]]);
   if (it.lvl && s.level < it.lvl) return "🔒 Level " + it.lvl;
   if (it.stars && stars() < it.stars) return "🔒 " + it.stars + " ⭐";
+  if (it.adv && (s.adv || 0) < it.adv) return "🎄 " + (s.adv || 0) + "/" + it.adv + " doors";
   return "";
 }
 

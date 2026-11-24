@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Final boss · The Hirsch Games</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root{--bg:radial-gradient(ellipse at 50% 0%,#3a0a0a 0%,#0c0303 70%);--panel:#1a0808;--txt:#fff2ee;--muted:#d8a8a0;--line:#4a1a14;--btn:#2a0c0a;--accent:#ff5a2a;--accentTxt:#fff;--accent2:#ffb38f;--bubble:#2a0f0c;--input:#120404;--ok:#6fe59a;--bad:#ffb03a}
+  .arena{position:relative;height:210px;overflow:hidden;border-radius:14px 14px 0 0;background:radial-gradient(ellipse at 50% 120%,#ff5a2a55,transparent 60%),linear-gradient(#1a0606,#3a0c08)}
+  .arena .boss{position:absolute;right:8%;bottom:20px;font-size:110px;line-height:1;filter:drop-shadow(0 0 20px #ff5a2a88);transition:transform .2s}
+  .arena .boss.hit{animation:hit .4s}
+  @keyframes hit{25%{transform:translateX(14px) rotate(6deg);filter:brightness(2.2)}60%{transform:translateX(-6px)}}
+  .arena .boss.rage{animation:rage 1.2s infinite}
+  @keyframes rage{50%{transform:scale(1.06);filter:drop-shadow(0 0 30px #ff2a2a)}}
+  .arena .hero{position:absolute;left:8%;bottom:20px;width:96px;height:96px;border-radius:50%;overflow:hidden;background:#fff;border:4px solid #3ab0ff;box-shadow:0 0 20px #3ab0ff88}
+  .arena .hero svg{width:100%;height:100%}
+  .hp{position:absolute;right:4%;top:12px;width:46%}
+  .hp .nm{font-weight:900;font-size:15px;letter-spacing:.05em;text-align:right}
+  .hp .b{height:16px;border-radius:9px;background:#000a;border:2px solid #ff5a2a;overflow:hidden;margin-top:3px}
+  .hp .b i{display:block;height:100%;background:linear-gradient(90deg,#ff2a2a,#ffb03a);transition:width .6s}
+  .hearts{position:absolute;left:4%;top:14px;font-size:22px}
+  .ph{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);font-weight:900;font-size:15px;color:#ffd23a;letter-spacing:.1em;text-align:center}
+  .say{position:absolute;right:30%;bottom:120px;max-width:44%;background:#fff;color:#3a0a0a;border-radius:12px;padding:6px 10px;font-size:14px;font-weight:700}
+  .say:after{content:"";position:absolute;right:-8px;bottom:10px;border:8px solid transparent;border-left-color:#fff}
+  .mini{display:grid;gap:10px;margin:14px 0}
+  .mini a{display:flex;gap:14px;align-items:center;padding:14px;border-radius:14px;background:linear-gradient(135deg,#3a0c08,#6a1a10);border:1px solid #8a2a1a;color:#fff;text-decoration:none}
+  .mini a .e{font-size:44px}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script src="game.js?v=12"></script>
+<script src="juego.js?v=7"></script>
+<script>
+const BOSSES = {
+ 1: { name: "THE CROC KING", e: "🐊", unit: "Unit 1 · Exploring Australia", lines: ["Grrr… Nobody is bigger than me! 👑", "You can't escape – you'll have to fight!", "I'm the most dangerous animal in Australia! GRAAAH…"],
+   intro: "The Croc King rules the rivers of Kakadu. He is older, bigger and more dangerous than every other crocodile. Only perfect English can beat him: modals, comparison, adjectives and adverbs – everything from Unit 1!",
+   stages: [
+    { label: "Phase 1", title: "The king wakes up", memo: "📌 can = be able to · must = have to · may = be allowed to · mustn't = nicht dürfen · needn't = nicht müssen · big – bigger – the biggest · famous – more famous – the most famous · slow (adjective) – slowly (adverb)", tasks: [
+      { t: "choice", q: "You ___ feed the crocodiles! (nicht dürfen)", opts: ["mustn't", "needn't", "can't"], a: "mustn't", hint: "nicht dürfen = mustn't." },
+      { t: "choice", q: "Yesterday we ___ swim in the river. (nicht dürfen)", opts: ["weren't allowed to", "mustn't", "didn't must"], a: "weren't allowed to", hint: "Vergangenheit von may/nicht dürfen: weren't allowed to." },
+      { t: "choice", q: "The Croc King is ___ than all the other crocodiles.", opts: ["bigger", "more big", "biggest"], a: "bigger", hint: "big – bigger – the biggest." },
+      { t: "choice", q: "He swims very ___.", opts: ["quietly", "quiet"], keep: true, a: "quietly", hint: "How does he swim? → adverb." },
+      { t: "choice", q: "Uluru is one of the ___ places in Australia.", opts: ["most famous", "famousest", "more famous"], a: "most famous", hint: "famous – more famous – the most famous." },
+      { t: "choice", q: "This is a ___ river.", opts: ["dangerous", "dangerously"], keep: true, a: "dangerous", hint: "a … river → adjective." }] },
+    { label: "Phase 2", title: "The king attacks", memo: "📌 future: will have to / will be able to · past: had to / could, was able to · good – better – the best · bad – worse – the worst · good → well · silent → silently", tasks: [
+      { t: "type", q: "Tomorrow we ___ get up early. (müssen – future)", a: "will have to", tips: { "will must": "Nach will kein must → will have to." } },
+      { t: "type", q: "The Croc King's teeth are ___ than knives. (sharp)", a: "sharper" },
+      { t: "type", q: "He moves ___ through the water. (silent)", a: "silently" },
+      { t: "type", q: "I ___ see him yesterday because it was dark. (nicht können)", a: ["couldn't", "could not", "wasn't able to", "was not able to"] },
+      { t: "type", q: "This is the ___ day of my life! (bad)", a: "worst", tips: { "baddest": "bad – worse – the worst." } },
+      { t: "type", q: "You fought really ___! (good)", a: "well", tips: { "good": "How did you fight? → adverb: well." } }] },
+    { label: "Final phase", title: "The king is angry!", memo: "📌 don't have to = needn't · not as … as · will be able to · stronger (not more strong) · adverb after a verb", tasks: [
+      { t: "order", task: "Build the sentence:", taskDe: "Du musst keine Angst haben.", words: ["You", "don't", "have", "to", "be", "afraid."], a: "You don't have to be afraid." },
+      { t: "order", task: "Build the sentence:", taskDe: "Er ist nicht so schnell wie ein Känguru.", words: ["He", "isn't", "as", "fast", "as", "a", "kangaroo."], a: "He isn't as fast as a kangaroo." },
+      { t: "order", task: "Build the sentence:", taskDe: "Werden wir ihn besiegen können?", words: ["Will", "we", "be", "able", "to", "beat", "him?"], a: "Will we be able to beat him?" },
+      { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["The", "Croc King", "is", "more strong", "than", "me."], bad: 3, opts: ["stronger", "more strong", "strongest"], fix: "stronger", hint: "strong → stronger." },
+      { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["He", "looked", "at", "me", "angry."], bad: 4, opts: ["angrily.", "angry.", "anger."], fix: "angrily.", hint: "How did he look at me? → adverb: angrily." },
+      { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["Yesterday", "I", "must", "run", "away."], bad: 2, opts: ["had to", "must", "have to"], fix: "had to", hint: "Yesterday → had to." }] }] },
+ 2: { name: "THE KRAKEN", e: "🐙", unit: "Unit 2 · Colourful Caribbean", lines: ["Eight arms, eight traps! 🐙", "While you were reading, I was coming closer…", "The ships which I sank are all mine! HAHAHA!"],
+   intro: "The Kraken lives in the deep sea of the Caribbean. It sinks every ship which comes too close. Beat it with relative clauses, contact clauses, the past progressive and the simple past – everything from Unit 2!",
+   stages: [
+    { label: "Phase 1", title: "Out of the deep", memo: "📌 who → people · which → things/animals · was/were + -ing = past progressive (lange Handlung) · simple past = kurze Handlung · while + long action, when + short action", tasks: [
+      { t: "choice", q: "The Kraken is a monster ___ lives in the deep sea.", opts: ["which", "who", "what"], a: "which", hint: "A monster/animal → which." },
+      { t: "choice", q: "The sailors ___ saw it never came back.", opts: ["who", "which", "what"], a: "who", hint: "sailors = people → who." },
+      { t: "choice", q: "The ship ___ the Kraken attacked sank.", opts: ["which", "who", "what"], a: "which", hint: "ship = thing → which (or leave it out!)." },
+      { t: "choice", q: "At 9 pm the sailors ___ dinner.", opts: ["were having", "was having", "had having"], a: "were having", hint: "sailors = they → were + -ing." },
+      { t: "choice", q: "While the captain was sleeping, the Kraken ___ the ship.", opts: ["attacked", "was attacking"], keep: true, a: "attacked", hint: "Short action → simple past." },
+      { t: "choice", q: "When the storm started, we ___.", opts: ["were fishing", "fished"], keep: true, a: "were fishing", hint: "Long action → past progressive." }] },
+    { label: "Phase 2", title: "Black ink!", memo: "📌 who / which · was/were + -ing · simple past: see – saw, go – went, take – took", tasks: [
+      { t: "type", q: "The Kraken has eight arms ___ can break a ship. (who/which)", a: ["which", "that"] },
+      { t: "type", q: "The pirate ___ found its cave got very rich. (who/which)", a: ["who", "that"] },
+      { t: "type", q: "At midnight the sea ___ very loudly. (roar – past progressive)", a: "was roaring" },
+      { t: "type", q: "We were sailing home when we ___ it. (see)", a: "saw", tips: { "were seeing": "Short action → simple past: saw." } },
+      { t: "type", q: "The girls ___ when the Kraken appeared. (swim – past progressive)", a: "were swimming", tips: { "were swiming": "swim → swimming (double m)." } },
+      { t: "type", q: "The man who ___ on the deck was shaking. (stand – past progressive)", a: "was standing" }] },
+    { label: "Final phase", title: "The Kraken is furious!", memo: "📌 Relative clause right after the person/thing · contact clause: the ship (which) the Kraken attacked · While + past progressive, simple past", tasks: [
+      { t: "order", task: "Build the sentence:", taskDe: "Der Krake ist ein Monster, das im Meer lebt.", words: ["The", "Kraken", "is", "a", "monster", "which", "lives", "in", "the", "sea."], a: "The Kraken is a monster which lives in the sea." },
+      { t: "order", task: "Build the sentence:", taskDe: "Während wir schliefen, griff der Krake das Schiff an.", words: ["While", "we", "were", "sleeping,", "the", "Kraken", "attacked", "the", "ship."], a: ["While we were sleeping, the Kraken attacked the ship.", "The Kraken attacked the ship while we were sleeping."] },
+      { t: "order", task: "Build the sentence (contact clause!):", taskDe: "Das Schiff, das der Krake angriff, hieß Mary Rose.", words: ["The", "ship", "the", "Kraken", "attacked", "was", "called", "Mary", "Rose."], a: "The ship the Kraken attacked was called Mary Rose." },
+      { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["The", "sailor", "which", "saw", "the", "Kraken", "was", "scared."], bad: 2, opts: ["who", "which", "what"], fix: "who", hint: "sailor = person → who." },
+      { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["While", "we", "sailed,", "the", "Kraken", "appeared."], bad: 2, opts: ["were sailing,", "sailed,", "was sailing,"], fix: "were sailing,", hint: "While + long action → were sailing." },
+      { t: "error", task: "Tap the wrong word.", taskDe: "Tippe auf das falsche Wort.", words: ["The", "sea", "was", "calm", "when", "the", "Kraken", "was appearing."], bad: 7, opts: ["appeared.", "was appearing.", "appear."], fix: "appeared.", hint: "when + short action → simple past: appeared." }] }] }
+};
+const U = +new URLSearchParams(location.search).get("u"), B = BOSSES[U];
+if (!B) {
+  const se = E8.getSession(), st = se && se.state ? se.state.stars || {} : {};
+  document.getElementById("app").innerHTML = `<div class="panel" style="max-width:720px;margin:20px auto;padding:18px"><a href="index.html" style="color:#ffb38f">← Lobby</a>
+    <h1 style="text-align:center">⚔️ Final bosses</h1><p style="text-align:center">At the end of every unit there is a final boss. Beat it with everything you know! <span class="de">– Am Ende jeder Unit wartet ein Endgegner. Gut zur Vorbereitung auf die Klassenarbeit.</span></p>
+    <div class="mini">${Object.entries(BOSSES).map(([k, b]) => `<a href="?u=${k}"><span class="e">${b.e}</span><span><b>${b.name}</b><br><span class="de">${b.unit}</span></span><span style="margin-left:auto;color:#ffd23a">${st["jefe-u" + k] ? "★".repeat(st["jefe-u" + k]) : "NEW"}</span></a>`).join("")}</div></div>`;
+} else {
+  const phaseMiss = S => (S.data.pm && S.data.pm[S.stage]) || 0;
+  JUEGO.start({
+    id: "jefe-u" + U, key: "e9-jefe-u" + U, icon: B.e, topic: "Final boss · " + B.unit, title: B.name,
+    intro: `<p>${B.intro}</p><p class="de">Endgegner: 3 Phasen, immer schwerer. Jede richtige Antwort trifft den Boss. Jede falsche kostet dich ein Herz ❤️ – du kannst aber immer weiterkämpfen.</p>`,
+    goLabel: "⚔️ Fight!", time: "about 15 minutes",
+    stages: B.stages.map((s, i) => Object.assign({ go: ["⚔️ Attack!", "🔥 Harder!", "💥 Final blow!"][i], intro: `<div class="who"><div class="face">${B.e}</div><div><b class="n">${B.name}</b>${B.lines[i]}</div></div>` }, s)),
+    onMistake: S => { S.data.pm = S.data.pm || {}; S.data.pm[S.stage] = (S.data.pm[S.stage] || 0) + 1; const b = document.querySelector(".arena .boss"); if (b) b.classList.add("rage"); },
+    onSolve: S => { const b = document.querySelector(".arena .boss"); if (b) { b.classList.remove("hit"); void b.offsetWidth; b.classList.add("hit"); } const i = document.querySelector(".hp .b i"); if (i) i.style.width = Math.max(0, Math.round((1 - S.solved / S.total) * 100)) + "%"; },
+    scene: (S) => { const hp = S.done ? 0 : Math.round((1 - S.solved / S.total) * 100), h = Math.max(0, 5 - phaseMiss(S));
+      return `<div class="arena"><div class="hearts">${"❤️".repeat(h)}${"🖤".repeat(5 - h)}</div>
+        <div class="hp"><div class="nm">${B.e} ${B.name}</div><div class="b"><i style="width:${hp}%"></i></div></div>
+        <div class="ph">${S.done ? "💥 VICTORY!" : (["PHASE 1", "PHASE 2", "FINAL PHASE"][S.stage] || "")}${!S.done && h === 0 ? "<br>😵 No hearts left – keep fighting!" : ""}</div>
+        <div class="hero">${E8.myAvatar()}</div><div class="boss" style="${S.done ? "transform:rotate(90deg) translateY(30px);opacity:.5" : ""}">${B.e}</div>
+        ${S.done ? "" : `<div class="say">${B.lines[Math.min(S.stage, 2)]}</div>`}</div>`; },
+    outro: `<div style="font-size:64px">💥${B.e}🏆</div><h1>You have beaten ${B.name}!</h1><p>Now you know everything from ${B.unit}. 💪</p><p><a class="btn" href="jefe-final.html">⚔️ Other bosses</a></p>`
+  });
+}
+</script>
+</body>
+</html>

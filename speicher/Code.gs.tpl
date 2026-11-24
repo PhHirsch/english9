@@ -30,10 +30,10 @@ function loadCat() {
     } catch (e) { t = props.getProperty("cat") || '{"items":{},"slots":[],"default":{}}'; }
   }
   const c = JSON.parse(t);
-  ITEMS = {}; Object.keys(c.items).forEach(id => { const a = c.items[id]; ITEMS[id] = { slot: a[0], price: a[1], lvl: a[2] || 0, months: a[3] || null }; });
+  ITEMS = {}; Object.keys(c.items).forEach(id => { const a = c.items[id]; ITEMS[id] = { slot: a[0], price: a[1], lvl: a[2] || 0, months: a[3] || null, adv: a[4] || 0 }; });
   SLOTS = c.slots; DEFAULT = c.default;
   HITEMS = {}; const h = c.house || { items: {}, slots: [], default: {}, stages: [0], yardStage: {} };
-  Object.keys(h.items).forEach(id => { const a = h.items[id]; HITEMS[id] = { slot: a[0], price: a[1], lvl: a[2] || 0, months: a[3] || null, stars: a[4] || 0 }; });
+  Object.keys(h.items).forEach(id => { const a = h.items[id]; HITEMS[id] = { slot: a[0], price: a[1], lvl: a[2] || 0, months: a[3] || null, stars: a[4] || 0, adv: a[5] || 0 }; });
   HSLOTS = h.slots; HDEFAULT = h.default; HSTAGES = h.stages; HYARD = h.yardStage;
 }
 /** Nach dem Einfügen einmal ausführen, um den Katalog-Zugriff zu testen. */
@@ -195,7 +195,7 @@ function state(p) {
   const all = allResults();
   const res = all.filter(r => String(r[1]) === String(p.v[C.NR]));
   const meta = all.reduce((a, r) => a + (Number(r[5]) || 0), 0);
-  const perfect = {}, days = {};
+  const perfect = {}, days = {}, adv = {};
   const stars = {}, plays = {};
   let xp = 0, home = false, improved = false, daily = 0;
   res.forEach(r => {
@@ -206,6 +206,7 @@ function state(p) {
       if (t[0] >= 6 || t[1] >= 15 || t[1] < 7) home = true;
     }
     if (r[0] instanceof Date) days[Utilities.formatDate(r[0], TZ, "yyyy-MM-dd")] = 1;
+    if (g.indexOf("adv-") === 0) adv[g] = 1;
     if (g === "daily") { daily++; return; }
     if (g !== "review" && String(r[3]) !== "" && Number(r[3]) === 0) perfect[g] = 1;
     if (g === "review") return;
@@ -217,7 +218,7 @@ function state(p) {
   const dailyToday = res.some(r => r[2] === "daily" && r[0] instanceof Date && Utilities.formatDate(r[0], TZ, "yyyy-MM-dd") === today);
   const sk = streakOf(days, today);
   return {
-    meta: meta, perfect: Object.keys(perfect), streak: sk.now, streakToday: !!days[today], streakBest: sk.best,
+    adv: Object.keys(adv).length, meta: meta, perfect: Object.keys(perfect), streak: sk.now, streakToday: !!days[today], streakBest: sk.best,
     fresh: !p.v[C.AVATAR], mustSetPin: String(p.v[C.EIGEN] || "").trim() !== "ja", nr: String(p.v[C.NR]), coins: Number(p.v[C.MUENZEN]) || 0,
     owned: owned(p.v), equipped: equippedOf(p.v), stars: stars, house: houseOf(p.v), review: reviewOf(p.v),
     starsTotal: Object.keys(stars).reduce((a, k) => a + stars[k], 0),
@@ -282,6 +283,7 @@ function buy(p, d) {
   }
   if (it.lvl && state(p).level < it.lvl) return { ok: false, error: "level" };
   if (it.stars && state(p).starsTotal < it.stars) return { ok: false, error: "stars" };
+  if (it.adv && (state(p).adv || 0) < it.adv) return { ok: false, error: "adv" };
   const coins = Number(p.v[C.MUENZEN]) || 0;
   if (coins < it.price) return { ok: false, error: "coins" };
   o.push(d.item);

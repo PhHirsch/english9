@@ -1,4 +1,4 @@
-/* English 9 – gemeinsamer Spielmotor (aus efspa0, englische Oberfläche) für Story-Spiele
+/* English 9 – gemeinsamer Spielmotor (aus efspa0 v7, englische Oberfläche) für Story-Spiele
    Jedes Spiel ruft JUEGO.start({...}) auf. Aufgabentypen: choice, type, order, error.
    Konventionen wie english8: Spielstand in sessionStorage, Resume-Frage, nur weiter bei richtig,
    falsche Aufgaben kommen später wieder, am Ende E8.reportInto mit total. */
@@ -67,6 +67,19 @@
   .stat{display:inline-block;background:var(--bubble);border-radius:10px;padding:6px 12px;margin:4px}
   .avbig{width:150px;border-radius:50%;overflow:hidden;margin:8px auto;border:4px solid var(--accent)}
   .small{font-size:14px;color:var(--muted)}
+  .combo{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);font-size:54px;font-weight:900;color:#ffd23a;text-shadow:0 0 18px #ff8a2a,0 4px 0 #a04a00;pointer-events:none;z-index:50;animation:cmb 1s ease-out forwards}
+  @keyframes cmb{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}25%{transform:translate(-50%,-50%) scale(1.15);opacity:1}100%{transform:translate(-50%,-120%) scale(1);opacity:0}}
+  .cf{position:fixed;width:10px;height:14px;top:40%;left:50%;z-index:49;pointer-events:none;border-radius:2px;animation:cf 1.1s ease-out forwards}
+  @keyframes cf{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+  .cbar{display:inline-flex;align-items:center;gap:4px;font-weight:800;color:#ffb03a;font-size:15px}
+  .cbar.hot{color:#ff5a2a;text-shadow:0 0 8px #ff8a2a}
+  .scene.bump{animation:bump .35s}
+  @keyframes bump{50%{transform:scale(1.015)}}
+  .tmr{height:8px;border-radius:5px;background:var(--line);overflow:hidden;margin:8px 0}
+  .tmr i{display:block;height:100%;background:linear-gradient(90deg,#ff5a2a,#ffd23a);transform-origin:left}
+  .hardtag{display:inline-block;background:#ff3a2a;color:#fff;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:.08em}
+  .pick{display:grid;gap:10px;margin-top:12px}
+  .pick .btn{text-align:left;font-size:18px}
   @media(max-width:560px){.q{font-size:20px}.opts{grid-template-columns:1fr}}`;
 
   const $ = id => document.getElementById(id);
@@ -82,7 +95,7 @@
   const cap = (q, w) => /^\s*___/.test(q) ? w.charAt(0).toUpperCase() + w.slice(1) : w;
   const solText = t => t.show || (t.q ? (t.q.indexOf("___") >= 0 ? t.q.replace(/___/g, "<b>" + cap(t.q, asList(t.a)[0]) + "</b>") : t.q + " → <b>" + asList(t.a)[0] + "</b>") : asList(t.a)[0]);
 
-  let G = null, S = null, LOCK = false;
+  let G = null, S = null, LOCK = false, TMR = null;
   const ALL = () => G.stages.flatMap((st, si) => st.tasks.map((t, ti) => si + "-" + ti));
   const task = id => { const [s, t] = id.split("-").map(Number); return G.stages[s].tasks[t]; };
   function save() { try { sessionStorage.setItem(G.key, JSON.stringify(S)); } catch (e) { } }
@@ -91,13 +104,15 @@
   function reset() { S = null; try { sessionStorage.removeItem(G.key); } catch (e) { } }
 
   function newGame() {
-    S = { v: 1, nr: me(), stage: 0, phase: "intro", queue: [], solved: 0, total: ALL().length, mistakes: 0, wrong: [], start: Date.now(), end: 0, done: false, data: {} };
+    S = { v: 1, nr: me(), stage: 0, phase: "intro", queue: [], solved: 0, total: ALL().length, mistakes: 0, wrong: [], start: Date.now(), end: 0, done: false, data: {}, picks: {}, combo: 0, bestCombo: 0 };
     save();
   }
   function startStage() {
     const st = G.stages[S.stage];
     const ids = st.tasks.map((t, i) => S.stage + "-" + i);
     S.queue = st.shuffle ? shuffle(ids) : ids;
+    const pk = st.pick && S.picks && st.pick.opts[S.picks[S.stage]];
+    if (pk && pk.first) { const f = pk.first.map(i => S.stage + "-" + i); S.queue = f.concat(S.queue.filter(x => f.indexOf(x) < 0)); }
     S.phase = "play"; save();
   }
 
@@ -135,15 +150,22 @@
   function render() {
     if (S.done) return finish();
     const st = G.stages[S.stage];
+    if (S.phase === "intro" && st.pick && (!S.picks || S.picks[S.stage] === undefined)) {
+      $("app").innerHTML = frame(`${scene()}<div class="panel"><span class="tag">${st.label || "Part " + (S.stage + 1)}</span><h2>${st.title}</h2>${st.pick.intro || ""}
+        <div class="q">🤔 ${st.pick.q}</div>${st.pick.qDe ? `<div class="de">${st.pick.qDe}</div>` : ""}<div class="small">You decide – es gibt kein Richtig oder Falsch.</div>
+        <div class="pick">${st.pick.opts.map((o, i) => `<button class="btn" data-i="${i}">${o.t}</button>`).join("")}</div></div>`, { mistakes: true });
+      wire(); document.querySelectorAll(".pick .btn").forEach(b => b.onclick = () => { S.picks = S.picks || {}; S.picks[S.stage] = +b.dataset.i; save(); render(); }); window.scrollTo(0, 0); return;
+    }
     if (S.phase === "intro") {
-      $("app").innerHTML = frame(`${scene()}<div class="panel"><span class="tag">${st.label || "Part " + (S.stage + 1)}</span><h2>${st.title}</h2>${st.intro || ""}
+      const pko = st.pick && st.pick.opts[S.picks[S.stage]];
+      $("app").innerHTML = frame(`${scene()}<div class="panel"><span class="tag">${st.label || "Part " + (S.stage + 1)}</span><h2>${st.title}</h2>${pko && pko.intro ? pko.intro : ""}${st.intro || ""}
         <div class="row c" style="margin-top:14px"><button class="btn primary" id="go">${st.go || "Start!"}</button></div></div>`, { mistakes: true });
       wire(); $("go").onclick = () => { startStage(); render(); }; window.scrollTo(0, 0); return;
     }
     const id = S.queue[0], t = task(id);
     const doneInStage = st.tasks.length - new Set(S.queue).size;
     const dots = `<div class="dots">${st.tasks.map((x, i) => `<i class="${i < doneInStage ? "d" : ""}"></i>`).join("")}</div>`;
-    $("app").innerHTML = frame(`${scene()}<div class="panel"><div class="row" style="justify-content:space-between"><span class="tag">${st.label || "Part " + (S.stage + 1)}</span><span class="small">${st.title}</span></div>${dots}
+    $("app").innerHTML = frame(`${scene()}<div class="panel"><div class="row" style="justify-content:space-between"><span class="tag">${st.label || "Part " + (S.stage + 1)}</span>${G.hard ? `<span class="hardtag">🔥 MODO DIFÍCIL</span>` : ""}<span class="cbar ${S.combo >= 5 ? "hot" : ""}" id="cbar">${S.combo >= 2 ? "🔥 ×" + S.combo : ""}</span><span class="small">${st.title}</span></div>${dots}${G.hard ? `<div class="tmr"><i id="tmr"></i></div>` : ""}
       ${st.memo ? `<div class="rule" style="font-size:16px">${st.memo}</div>` : ""}<div id="task"></div><div class="fb" id="fb"></div><div class="row c" id="nextrow"></div></div>`, { mistakes: true });
     if (!t.pista && G.autoPista !== false) {
       const h = t.hint && t.hint.indexOf("→") >= 0 ? t.hint.replace(/→(?!.*→)[\s\S]*$/, "→ …") : "";
@@ -151,6 +173,9 @@
       if (st.pista && h && t.t !== "type") t.pista = h;
     }
     wire(); LOCK = false; JUEGO._t = t;
+    clearInterval(TMR);
+    if (G.hard) { const lim = (t.t === "choice" ? 25 : t.t === "type" ? 40 : 60) * 1000, t0 = Date.now();
+      TMR = setInterval(() => { const f = 1 - (Date.now() - t0) / lim; if ($("tmr")) $("tmr").style.transform = `scaleX(${Math.max(0, f)})`; if (f <= 0) { clearInterval(TMR); if (!LOCK) wrong(t, id, "⏱️ Time's up! – Zeit abgelaufen."); } }, 100); }
     ({ choice: rChoice, type: rType, order: rOrder, error: rError, sort: rSort })[t.t](t, id);
     if ($("pbtn")) $("pbtn").onclick = () => { $("pbox").style.display = "block"; $("pbtn").style.display = "none"; };
   }
@@ -166,10 +191,28 @@
     return h;
   }
 
+  /* ---------- Spielgefühl: Combo + Konfetti (nur Optik) ---------- */
+  function juice(c) {
+    if ($("cbar")) { $("cbar").textContent = c >= 2 ? "🔥 ×" + c : ""; $("cbar").className = "cbar" + (c >= 5 ? " hot" : ""); }
+    const sc = document.querySelector(".scene"); if (sc) { sc.classList.remove("bump"); void sc.offsetWidth; sc.classList.add("bump"); }
+    if (c === 3 || c === 5 || c % 5 === 0 && c >= 10) {
+      const el = document.createElement("div"); el.className = "combo"; el.textContent = c >= 10 ? `🔥 ×${c} UNSTOPPABLE!` : c >= 5 ? `🔥 ×${c} ON FIRE!` : `🔥 ×${c} NICE!`;
+      document.body.appendChild(el); setTimeout(() => el.remove(), 1000); confetti(c >= 5 ? 40 : 22);
+    }
+  }
+  function confetti(n) {
+    const C = ["#ffd23a", "#ff4f8b", "#3ab0ff", "#3fd27a", "#ff8a2a", "#a05cf0"];
+    for (let i = 0; i < n; i++) { const e = document.createElement("i"); e.className = "cf";
+      e.style.cssText = `background:${C[i % 6]};--x:${(Math.random() * 2 - 1) * 46}vw;--y:${(Math.random() * 1.2 - .3) * 50}vh;--r:${Math.random() * 720}deg;left:${45 + Math.random() * 10}%`;
+      document.body.appendChild(e); setTimeout(() => e.remove(), 1200); }
+  }
+
   /* ---------- Antwort-Verarbeitung ---------- */
   function right(t, id, msg) {
     if (LOCK) return; LOCK = true;
+    clearInterval(TMR);
     S.queue.shift(); if (S.queue.indexOf(id) < 0) S.solved++;
+    S.combo = (S.combo || 0) + 1; S.bestCombo = Math.max(S.bestCombo || 0, S.combo); juice(S.combo);
     if (G.onSolve) G.onSolve(S, t);
     $("fb").className = "fb good";
     $("fb").innerHTML = (msg || ["Correct! ✔", "Well done! ⭐", "Great! 🎉", "Perfect! ✔"][Math.floor(Math.random() * 4)]) + (t.after ? `<span class="hint">${t.after}</span>` : "");
@@ -177,6 +220,8 @@
   }
   function wrong(t, id, hint) {
     if (LOCK) return; LOCK = true;
+    clearInterval(TMR);
+    const lost = S.combo || 0; S.combo = 0; if ($("cbar")) $("cbar").textContent = lost >= 3 ? "💨 combo ×" + lost + " perdido" : "";
     S.mistakes++; if (S.wrong.indexOf(id) < 0) S.wrong.push(id); if ($("errc")) $("errc").textContent = S.mistakes;
     S.queue.shift(); S.queue.splice(Math.min(3, S.queue.length), 0, id);
     save();
@@ -218,7 +263,7 @@
       if (LOCK || !inp.value.trim()) return;
       const g = norm(inp.value), A = asList(t.a).map(norm);
       if (A.indexOf(g) >= 0) { if ($("gap")) $("gap").textContent = inp.value.trim(); inp.disabled = true; return right(t, id); }
-            const tip = t.tips && Object.keys(t.tips).find(k => norm(k) === g);
+      const tip = t.tips && Object.keys(t.tips).find(k => norm(k) === g);
       wrong(t, id, tip ? t.tips[tip] : null);
     };
     $("chk").onclick = go; inp.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
@@ -274,7 +319,7 @@
         else {
           bt.classList.add("wrong"); setTimeout(() => bt.classList.remove("wrong"), 400);
           S.mistakes++; miss = true; if (S.wrong.indexOf(id) < 0) S.wrong.push(id); if ($("errc")) $("errc").textContent = S.mistakes; save();
-          $("fb").className = "fb bad"; $("fb").innerHTML = "✘ " + ((t.why && t.why[x.b]) || "Wrong box. – Falsche Kiste.");
+          $("fb").className = "fb bad"; $("fb").innerHTML = "✘ " + ((t.why && t.why[x.b]) || "Esta caja no es correcta. – Falsche Kiste. Schau auf Geschlecht und Zahl!");
         }
       });
     };
@@ -285,17 +330,36 @@
   function finish() {
     const sec = Math.round((S.end - S.start) / 1000);
     $("app").innerHTML = frame(`${scene()}<div class="panel center">${G.outro}
-      <p><span class="stat">Mistakes: <b>${S.mistakes}</b></span><span class="stat">Time: <b>${Math.floor(sec / 60)} min ${sec % 60} s</b></span><span class="stat">Tasks: <b>${S.total}</b></span></p>
+      <p><span class="stat">Mistakes: <b>${S.mistakes}</b></span><span class="stat">Time: <b>${Math.floor(sec / 60)} min ${sec % 60} s</b></span><span class="stat">Tasks: <b>${S.total}</b></span>${S.bestCombo >= 3 ? `<span class="stat">Best combo: <b>🔥 ×${S.bestCombo}</b></span>` : ""}</p>
       <div id="coinbox" style="margin:12px auto;padding:12px;background:var(--bubble);border-radius:12px;max-width:460px"></div>
       ${S.wrong.length ? `<div style="text-align:left"><b>Look at this again:</b> <span class="small">– Das solltest du nochmal anschauen:</span><ul>${S.wrong.map(id => `<li>${solText(task(id))}</li>`).join("")}</ul></div>` : `<p>🌟 No mistakes – flawless!</p>`}
+      ${G.noHard || G.hard ? "" : `<div class="rule" style="margin:12px auto;max-width:520px"><b>💀 Dare to try? – HARD MODE</b><br>Type instead of choosing, with a time limit and no tips. Your own crown! <div class="de">Eintippen statt Auswählen, mit Zeitlimit und ohne Tipps – mit eigener Krone.</div><div class="row c" style="margin-top:8px"><button class="btn" id="hard">💀 Play in hard mode</button></div></div>`}
       <div class="row c"><button class="btn primary" id="again">Play again / new player</button><button class="btn" onclick="location.href='./'">← All games</button></div></div>`);
     wire();
     E8.reportInto("coinbox", G.id, S, save);
     $("again").onclick = () => { reset(); intro(); };
+    if ($("hard")) $("hard").onclick = () => { location.href = location.pathname + "?mode=hard"; };
+    if (S.mistakes === 0) confetti(60);
+  }
+  /* Modo difícil: kurze Auswahl-Antworten werden zu Eintipp-Aufgaben, keine Pistas, Zeitlimit */
+  function hardify(cfg) {
+    cfg.hard = true; cfg.id += "-hard"; cfg.key += "-hard"; cfg.autoPista = false;
+    cfg.topic = "💀 Hard mode · " + cfg.topic;
+    cfg.intro = `<div class="rule"><b>💀 HARD MODE</b> – you type the answers, there is a time limit and there are no tips. <div class="de">Du tippst die Antworten selbst, hast ein Zeitlimit und keine Tipps. Die Merk-Box bleibt.</div></div>` + cfg.intro;
+    cfg.stages.forEach(st => { st.pista = null; st.tasks = st.tasks.map(t => {
+      t = Object.assign({}, t); t.pista = null;
+      const a = asList(t.a)[0];
+      if (t.t === "choice" && typeof a === "string" && a.length <= 24 && !/[✔✘…→\u{1F300}-\u{1FAFF}]/u.test(a) && (t.q || t.task)) {
+        t.t = "type"; t.a = asList(t.a); t.show = t.show || solText(Object.assign({}, t, { t: "choice" }));
+        if (!t.task) { t.task = "Type the answer:"; t.taskDe = "Tippe die Antwort."; }
+      }
+      return t; }); });
+    return cfg;
   }
 
   window.JUEGO = {
     start(cfg) {
+      if (/[?&]mode=hard/.test(location.search) && !cfg.noHard) cfg = hardify(cfg);
       G = cfg;
       const st = document.createElement("style"); st.textContent = CSS; document.head.appendChild(st);
       document.body.insertAdjacentHTML("beforeend", `<div class="ov" id="ov"><div class="panel" id="ovc"></div></div>`);

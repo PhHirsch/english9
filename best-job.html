@@ -23,8 +23,8 @@
 </head>
 <body>
 <main id="app"></main>
-<script src="game.js?v=11"></script>
-<script src="juego.js?v=1"></script>
+<script src="game.js?v=12"></script>
+<script src="juego.js?v=7"></script>
 <script>
 const SCENE = (S, o) => { const p = S.done ? 1 : S.solved / S.total;
   return `<div class="track">${(o.deco||[]).map(d => `<span class="deco" style="left:${d[0]}%;top:${d[1]}px">${d[2]}</span>`).join("")}<span class="start">${o.start}</span><span class="goal">${o.goal}</span><div class="path"></div>
@@ -60,6 +60,10 @@ JUEGO.start({
         { t: "choice", who: J, q: "Lena has ___ followers of all.", opts: ["the most", "more", "the much"], a: "the most", hint: "50,000 is the highest number → the most." }
       ] },
     { label: "Round 2", title: "The interviews", shuffle: true,
+      pick: { q: "The jury asks you: Who do we interview first?", qDe: "Wen interviewen wir zuerst?", opts: [
+        { t: "🏊‍♀️ Ella", intro: `<p>🏊‍♀️ Ella comes in first. She is nervous, but she smiles a lot.</p>`, first: [0] },
+        { t: "📸 Kofi", intro: `<p>📸 Kofi comes in first – with his camera, of course!</p>`, first: [2, 4] },
+        { t: "📱 Lena", intro: `<p>📱 Lena comes in first. She is filming the interview for her followers!</p>`, first: [1, 3] }] },
       memo: `📌 -er/-est: quiet – quieter · hot – ho<b>tt</b>er · funny – funn<b>ie</b>st · more/most: more interesting, the most exciting · good – better – the best · bad – worse – the worst`,
       intro: `<div class="who"><div class="face">👨🏾‍💼</div><div><b class="n">Mr Harris</b>Now write down the jury's notes from the interviews. Careful with the spelling!</div></div>`,
       pista: "Short word → -er/-est. Long word → more/most. good/bad are irregular.",
