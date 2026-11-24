@@ -372,7 +372,7 @@ function metaBox(){
     <div class="de" style="font-size:13px;opacity:.85">All the coins our class earns build our harbour together. – Alle Münzen des Kurses bauen gemeinsam euren Hafen.</div>
     <div class="mb"><i style="width:${pct}%"></i></div>
     <div style="font-size:15px"><b>${m.toLocaleString("en-GB")} 🪙</b> ${nxt?`· next: ${nxt[1]} ${nxt[2]} at ${nxt[0].toLocaleString("en-GB")} 🪙`:"· Harbour finished! 🎉"}</div>
-    <div class="ms" style="margin-top:8px">${METAS.map(x=>`<span class="${m>=x[0]?"ok":""}">${x[1]} ${(x[0]/1000)}k</span>`).join("")}</div></div></div>`;
+    <div class="ms" style="margin-top:8px">${METAS.map(x=>`<span class="${m>=x[0]?"ok":""}">${x[1]} ${(x[0]/1000)}k</span>`).join("")}</div><a href="home.html#hood" style="display:inline-block;margin-top:10px;color:#ffd23a;font-weight:800;text-decoration:none">🏙️ See the Harbour Square in town →</a></div></div>`;
 }
 let VIEW = (()=>{ try { return localStorage.getItem("e9-view") || "shelf"; } catch(e) { return "shelf"; } })();
 function viewToggle(){
