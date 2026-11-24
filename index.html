@@ -179,8 +179,8 @@
 
 <script src="game.js?v=12"></script>
 <script src="bosses.js?v=10"></script>
-<script src="covers.js?v=13"></script>
-<script src="cromos.js?v=1"></script>
+<script src="covers.js?v=14"></script>
+<script src="cromos.js?v=2"></script>
 <script src="vocab-u2.js?v=9"></script>
 <script>
 /* ===== Seiten-Einstellungen (für jede Klasse anpassen) ===== */
@@ -191,8 +191,6 @@ window.VOCAB = window.VOCAB || {}; window.COVERS = window.COVERS || {};
 /* Geschlossen (noch nicht im Unterricht dran): einfach aus der Liste nehmen, um sie zu öffnen */
 const CLOSED = ["pp-blackout", "pp-lighthouse", "jefe-u2"];
 const GRAMMAR = [
-  {id:"ifclauses", unit:"u2", file:"hurricane.html", icon:"🌀", topic:"if-clauses", name:"Hurricane Warning", info:"A hurricane is coming! Help the island radio with the right advice.", color:"linear-gradient(135deg,#14203a,#4a6a9a)", accent:"#ffd23a", isNew:true},
-  {id:"sp-pp", unit:"u2", file:"fake-or-real.html", icon:"🤳", topic:"Simple past & present perfect", name:"Fake or Real?", info:"Has this influencer really been to the Caribbean? Check the facts!", color:"linear-gradient(135deg,#3a0a5a,#ff4fb0)", accent:"#ff4fb0", isNew:true},
   {id:"adverbs", unit:"u1", file:"croc-cam.html", icon:"🐊", topic:"Adjectives & adverbs", name:"Croc Cam", info:"Be the voice of a live nature show – and watch out for Big Bruce!", color:"linear-gradient(135deg,#0e2a10,#3a8a3a)", accent:"#ff3b3b", isNew:true},
   {id:"comparison", unit:"u1", file:"best-job.html", icon:"🏝️", topic:"Comparison", name:"The Best Job in the World", info:"You're on the jury: compare the finalists and find the best island caretaker.", color:"linear-gradient(135deg,#06324a,#2ad0c8)", accent:"#2ad0c8", isNew:true},
   {id:"modals", unit:"u1", file:"outback-camp.html", icon:"🏕️", topic:"Modals & substitutes", name:"Outback Survival Camp", info:"Learn the rules of the bush – and survive the night in the Outback!", color:"linear-gradient(135deg,#5a1e08,#ff7a2a)", accent:"#ff7a2a", isNew:true},
@@ -234,7 +232,7 @@ BOSSCARDS.forEach(b => ALL.push(b));
 if (!ALL.length) ALL.push({id:"soon", href:"", topic:"Coming soon", name:"New games are coming", info:"New games will appear here soon. You can already create your avatar.", art:"", accent:"#5a3cb0", color:"linear-gradient(135deg,#1e1650,#5a3cb0)"});
 
 const NOSTAR = ["daily","review","postcard","adviento"];
-const hardOk = g => (GRAMMAR.some(x => x.id === g.id && /\.html$/.test(x.file) && ["modals","comparison","adverbs","sp-pp","ifclauses"].indexOf(x.id) >= 0) || g.boss) && starsOf(g.id) > 0;
+const hardOk = g => (GRAMMAR.some(x => x.id === g.id && /\.html$/.test(x.file) && ["modals","comparison","adverbs"].indexOf(x.id) >= 0) || g.boss) && starsOf(g.id) > 0;
 const isFlawless = id => { const s = state(); return !!(s && s.perfect && s.perfect.indexOf(id) >= 0); };
 
 /* ===== Erfolge ===== */

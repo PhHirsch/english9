@@ -8,8 +8,6 @@ window.CROMOS = [
   { id: "modals", f: "👩🏽‍🦰", n: "Ranger Kylie", c: "#6a2a0a", t: "She can find water in the desert – and you mustn't feed her dingoes!", de: "aus Outback Survival Camp" },
   { id: "comparison", f: "🏊🏿‍♂️", n: "Kofi", c: "#0a4a5a", t: "The best swimmer of all – and now the caretaker of a reef island.", de: "aus The Best Job in the World" },
   { id: "adverbs", f: "🐊", n: "Big Bruce", c: "#1e4a1e", t: "The biggest crocodile in Kakadu. He moves slowly – but he loves sandwiches.", de: "aus Croc Cam" },
-  { id: "sp-pp", f: "🤳🏼", n: "Sunny Skye", c: "#5a0a4a", t: "Two million followers. Has she ever been to the Caribbean? Never!", de: "aus Fake or Real?" },
-  { id: "ifclauses", f: "📻", n: "Marlon", c: "#1a2a4a", t: "Presenter at Island FM. If a storm comes, he will be on air all night.", de: "aus Hurricane Warning" },
   { id: "post-1", f: "👧🏼", n: "Mia Clarke", c: "#6a3a10", t: "15, lives near Bondi Beach and follows her uncle's postcards around the world.", de: "aus The Postcard Trail, Kapitel 1" },
   { id: "post-2", f: "🎶", n: "Kayla", c: "#5a1a3a", t: "Ben's cousin in Trinidad. She plays the steelpan – and she is very brave.", de: "aus The Postcard Trail, Kapitel 2" },
   { id: "irregular", f: "🕹️", n: "Irregular Rush", c: "#3a0a6a", t: "An arcade machine from the 80s. go – went – gone … or GAME OVER! ❤️❤️❤️", de: "Arcade" },
