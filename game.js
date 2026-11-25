@@ -13,16 +13,20 @@
   const ACTIVE_UNITS = [1, 2];
   const SKEY = "e9session", MAXAGE = 90 * 60 * 1000;
 
+  /* MEM: Ersatz im Arbeitsspeicher, falls der Browser sessionStorage blockiert (z. B. iPad „Alle Cookies blockieren“) */
+  let MEM = null, STORE_OK = true;
   function getSession() {
     try {
       const s = JSON.parse(sessionStorage.getItem(SKEY));
       if (s && Date.now() - s.t < MAXAGE) return s;
-      sessionStorage.removeItem(SKEY);
+      if (s) sessionStorage.removeItem(SKEY);
     } catch (e) {}
+    if (MEM && Date.now() - MEM.t < MAXAGE) return MEM;
     return null;
   }
-  function setSession(s) { s.t = Date.now(); try { sessionStorage.setItem(SKEY, JSON.stringify(s)); } catch (e) {} }
-  function logout() { try { sessionStorage.removeItem(SKEY); } catch (e) {} }
+  function setSession(s) { s.t = Date.now(); MEM = s; try { sessionStorage.setItem(SKEY, JSON.stringify(s)); STORE_OK = JSON.parse(sessionStorage.getItem(SKEY)).t === s.t; } catch (e) { STORE_OK = false; } }
+  function storageOk() { return STORE_OK; }
+  function logout() { MEM = null; try { sessionStorage.removeItem(SKEY); } catch (e) {} }
 
   /* Warteschlange: Ergebnisse ohne Verbindung (ohne PIN!) auf dem Gerät merken und später senden */
   const QKEY = SKEY + "-queue";
@@ -473,6 +477,6 @@
   }
 
   function myAvatar() { const s = getSession(); return avatarSVG(s && s.state ? s.state.equipped : null); }
-  window.E8 = { CATALOG: CATALOG, SLOTS: SLOTS, TABS: TABS, SLOTNAME: SLOTNAME, DEFAULT: DEFAULT, LEVEL_XP: LEVEL_XP, getSession: getSession, login: login, setPin: setPin, logout: logout, call: call, api: api, errText: errText, reportInto: reportInto, avatarSVG: avatarSVG, myAvatar: myAvatar, clean: clean, rarity: rarity, inSeason: inSeason, levelInfo: levelInfo, item: id => byId[id], ACTIVE_UNITS: ACTIVE_UNITS, available: i => !i.unit || ACTIVE_UNITS.indexOf(i.unit) >= 0, online: () => !!API_URL && API_URL.indexOf("/*") !== 0, flushQueue: flushQueue, pending: () => { const s = getSession(); return qGet().filter(x => !s || x.nr === s.nr).length; } };
+  window.E8 = { CATALOG: CATALOG, SLOTS: SLOTS, TABS: TABS, SLOTNAME: SLOTNAME, DEFAULT: DEFAULT, LEVEL_XP: LEVEL_XP, getSession: getSession, login: login, setPin: setPin, logout: logout, storageOk: storageOk, call: call, api: api, errText: errText, reportInto: reportInto, avatarSVG: avatarSVG, myAvatar: myAvatar, clean: clean, rarity: rarity, inSeason: inSeason, levelInfo: levelInfo, item: id => byId[id], ACTIVE_UNITS: ACTIVE_UNITS, available: i => !i.unit || ACTIVE_UNITS.indexOf(i.unit) >= 0, online: () => !!API_URL && API_URL.indexOf("/*") !== 0, flushQueue: flushQueue, pending: () => { const s = getSession(); return qGet().filter(x => !s || x.nr === s.nr).length; } };
   if (getSession()) setTimeout(flushQueue, 1500);
 })();

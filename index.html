@@ -177,7 +177,7 @@
 <div class="ov" id="pinov" style="z-index:40"><div class="sheet pinbox" id="pinbox"></div></div>
 <div class="tour" id="tour"><div class="hole" id="hole"></div><div class="tip" id="tip"></div></div>
 
-<script src="game.js?v=12"></script>
+<script src="game.js?v=13"></script>
 <script src="bosses.js?v=10"></script>
 <script src="covers.js?v=14"></script>
 <script src="cromos.js?v=2"></script>
@@ -306,7 +306,7 @@ function hero(){
       if(!nr||pin.length!==4){ $("msg").textContent="Number + 4-digit PIN. – Nummer und vierstellige PIN."; return; }
       $("go").disabled=true; $("msg").className="msg ok"; $("msg").textContent="Checking …";
       const r = await E8.login(nr,pin); $("go").disabled=false;
-      if(r.ok){ render(); if(r.state.mustSetPin) pinDialog(true); else afterLogin(); }
+      if(r.ok){ render(); if(E8.storageOk && !E8.storageOk()) storeWarn(); if(r.state.mustSetPin) pinDialog(true); else afterLogin(); }
       else { $("msg").className="msg"; $("msg").textContent=E8.errText(r.error); }
     };
     $("pin").addEventListener("keydown",e=>{ if(e.key==="Enter") $("go").click(); });
@@ -520,6 +520,7 @@ function pinDialog(first){
     if(a!==b){ m.textContent=E8.errText("pinmatch"); return; }
     $("psave").disabled=true; m.className="msg ok"; m.textContent="Saving …";
     const r = await E8.setPin(a); $("psave").disabled=false;
+    if(!r.ok && r.error==="nologin"){ $("pinov").classList.remove("show"); E8.logout(); render(); if($("msg")) $("msg").textContent="Please log in again with the PIN from your card. – Bitte noch einmal mit der PIN von deiner Karte anmelden."; return; }
     if(!r.ok){ m.className="msg"; m.textContent=E8.errText(r.error); return; }
     $("pinbox").innerHTML = `<div style="font-size:46px">✅</div><h2 class="D">PIN SAVED!</h2><p>Remember it! Next time log in with your number and your new PIN.</p><div class="de">Merk sie dir gut! Ab jetzt meldest du dich mit deiner neuen PIN an.</div><div class="row" style="justify-content:center;margin-top:12px"><button class="btn primary" id="pok">OK ▶</button></div>`;
     $("pok").onclick = () => { $("pinov").classList.remove("show"); render(); if(first) afterLogin(); };
@@ -569,6 +570,13 @@ function tourStep(){
   }, el ? 60 : 0);
 }
 
+function storeWarn(){
+  if ($("storewarn")) return;
+  const d = document.createElement("div"); d.id = "storewarn";
+  d.style.cssText = "position:fixed;left:12px;right:12px;top:12px;z-index:60;background:#ffd23a;color:#1a1a1a;border-radius:12px;padding:12px 16px;font-weight:700;box-shadow:0 6px 24px #0008";
+  d.innerHTML = `⚠️ This browser blocks saving your login, so you will have to log in again on every page. Ask your teacher. <span style="font-weight:400">– Dieser Browser speichert die Anmeldung nicht. iPad: Einstellungen → Safari → „Alle Cookies blockieren“ ausschalten (und kein privates Surfen).</span> <button style="margin-left:8px" onclick="this.parentNode.remove()">OK</button>`;
+  document.body.appendChild(d);
+}
 /* ===== Start ===== */
 (function(){
   let pre = null; try{ pre = sessionStorage.getItem("e9sel"); }catch(e){}

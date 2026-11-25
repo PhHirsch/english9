@@ -13,16 +13,20 @@
   const ACTIVE_UNITS = /*UNITS*/;
   const SKEY = "e9session", MAXAGE = 90 * 60 * 1000;
 
+  /* MEM: Ersatz im Arbeitsspeicher, falls der Browser sessionStorage blockiert (z. B. iPad „Alle Cookies blockieren“) */
+  let MEM = null, STORE_OK = true;
   function getSession() {
     try {
       const s = JSON.parse(sessionStorage.getItem(SKEY));
       if (s && Date.now() - s.t < MAXAGE) return s;
-      sessionStorage.removeItem(SKEY);
+      if (s) sessionStorage.removeItem(SKEY);
     } catch (e) {}
+    if (MEM && Date.now() - MEM.t < MAXAGE) return MEM;
     return null;
   }
-  function setSession(s) { s.t = Date.now(); try { sessionStorage.setItem(SKEY, JSON.stringify(s)); } catch (e) {} }
-  function logout() { try { sessionStorage.removeItem(SKEY); } catch (e) {} }
+  function setSession(s) { s.t = Date.now(); MEM = s; try { sessionStorage.setItem(SKEY, JSON.stringify(s)); STORE_OK = JSON.parse(sessionStorage.getItem(SKEY)).t === s.t; } catch (e) { STORE_OK = false; } }
+  function storageOk() { return STORE_OK; }
+  function logout() { MEM = null; try { sessionStorage.removeItem(SKEY); } catch (e) {} }
 
   /* Warteschlange: Ergebnisse ohne Verbindung (ohne PIN!) auf dem Gerät merken und später senden */
   const QKEY = SKEY + "-queue";
